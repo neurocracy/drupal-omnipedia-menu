@@ -1,0 +1,8 @@
+name: Omnipedia - Menus
+type: module
+description: Menu module for Omnipedia.
+package: Omnipedia
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - omnipedia_core:omnipedia_core
