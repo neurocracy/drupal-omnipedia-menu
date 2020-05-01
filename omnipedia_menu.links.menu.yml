@@ -2,4 +2,3 @@ main_page:
   class: Drupal\omnipedia_menu\Plugin\Menu\MainPage
   menu_name: main
   title: 'Main page'
-  route_name: entity.node.canonical

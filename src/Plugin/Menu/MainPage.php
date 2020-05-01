@@ -82,17 +82,17 @@ class MainPage extends MenuLinkDefault {
   /**
    * {@inheritdoc}
    */
+  public function getRouteName() {
+    return $this->wiki->getMainPageRouteName();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getRouteParameters() {
-    /** @var \Drupal\node\NodeInterface|null */
-    $node = $this->wiki->getMainPage(
+    return $this->wiki->getMainPageRouteParameters(
       $this->timeline->getDateFormatted('current', 'storage')
     );
-
-    if ($node instanceof NodeInterface) {
-      return ['node' => $node->nid->getString()];
-    } else {
-      return [];
-    }
   }
 
   /**
