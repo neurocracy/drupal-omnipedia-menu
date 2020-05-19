@@ -1,0 +1,6 @@
+omnipedia_menu.random_page:
+  path: '/wiki/random'
+  defaults:
+    _controller: '\Drupal\omnipedia_menu\Controller\RandomPageController::view'
+  requirements:
+    _permission: 'access content'

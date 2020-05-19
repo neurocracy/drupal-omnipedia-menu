@@ -2,3 +2,8 @@ main_page:
   class: Drupal\omnipedia_menu\Plugin\Menu\MainPage
   menu_name: main
   title: 'Main page'
+
+random_page:
+  route_name: omnipedia_menu.random_page
+  menu_name: main
+  title: 'Random article'
