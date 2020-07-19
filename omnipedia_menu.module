@@ -12,7 +12,7 @@ use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
  * @see \Drupal\omnipedia_core\Service\WikiInterface::getWikiNode()
  *   Used to load a wiki node and filter out any non-wiki nodes.
  *
- * @see \Drupal\omnipedia_core\Service\WikiInterface::isMainPage()
+ * @see \Drupal\omnipedia_core\Entity\NodeInterface::isMainPage()
  *   Used to determine if the route parameter is a main page wiki node.
  */
 function omnipedia_menu_menu_local_tasks_alter(
@@ -43,7 +43,7 @@ function omnipedia_menu_menu_local_tasks_alter(
 
   // If the wiki page is a main page, use its title as the tab title, to match
   // Wikipedia.
-  if ($wiki->isMainPage($node)) {
+  if ($node->isMainPage()) {
     $nodeLink['#link']['title'] = $node->getTitle();
 
   // Otherwise, just set the tab title to "Article", matching Wikipedia for all
