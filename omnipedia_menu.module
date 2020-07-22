@@ -9,7 +9,7 @@ use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
  * tab points to a main page wiki node), or "Article" for all other wiki page
  * nodes.
  *
- * @see \Drupal\omnipedia_core\Service\WikiInterface::getWikiNode()
+ * @see \Drupal\omnipedia_core\Service\WikiNodeResolverInterface::getWikiNode()
  *   Used to load a wiki node and filter out any non-wiki nodes.
  *
  * @see \Drupal\omnipedia_core\Entity\NodeInterface::isMainPage()
@@ -31,11 +31,11 @@ function omnipedia_menu_menu_local_tasks_alter(
   /** @var array */
   $routeParameters = $nodeLink['#link']['url']->getRouteParameters();
 
-  /** @var Drupal\omnipedia_core\Service\WikiInterface */
-  $wiki = \Drupal::service('omnipedia.wiki');
+  /** @var Drupal\omnipedia_core\Service\WikiNodeResolverInterface */
+  $wikiNodeResolver = \Drupal::service('omnipedia.wiki_node_resolver');
 
-  /** @var \Drupal\node\NodeInterface|null */
-  $node = $wiki->getWikiNode($routeParameters['node']);
+  /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+  $node = $wikiNodeResolver->getWikiNode($routeParameters['node']);
 
   if (\is_null($node)) {
     return;
