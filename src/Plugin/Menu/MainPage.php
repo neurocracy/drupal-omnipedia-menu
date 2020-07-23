@@ -7,7 +7,7 @@ use Drupal\Core\Menu\MenuLinkDefault;
 use Drupal\Core\Menu\StaticMenuLinkOverridesInterface;
 use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
-use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,11 +26,11 @@ class MainPage extends MenuLinkDefault {
   protected $timeline;
 
   /**
-   * The Omnipedia wiki service.
+   * The Omnipedia wiki node main page service.
    *
-   * @var \Drupal\omnipedia_core\Service\WikiInterface
+   * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
    */
-  protected $wiki;
+  protected $wikiNodeMainPage;
 
   /**
    * {@inheritdoc}
@@ -38,8 +38,8 @@ class MainPage extends MenuLinkDefault {
    * @param \Drupal\omnipedia_core\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
-   *   The Omnipedia wiki service.
+   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
+   *   The Omnipedia wiki node main page service.
    */
   public function __construct(
     array $configuration,
@@ -47,7 +47,7 @@ class MainPage extends MenuLinkDefault {
     $pluginDefinition,
     StaticMenuLinkOverridesInterface $staticOverride,
     TimelineInterface $timeline,
-    WikiInterface     $wiki
+    WikiNodeMainPageInterface $wikiNodeMainPage
   ) {
     parent::__construct(
       $configuration,
@@ -56,8 +56,8 @@ class MainPage extends MenuLinkDefault {
       $staticOverride
     );
 
-    $this->timeline = $timeline;
-    $this->wiki     = $wiki;
+    $this->timeline         = $timeline;
+    $this->wikiNodeMainPage = $wikiNodeMainPage;
   }
 
   /**
@@ -75,7 +75,7 @@ class MainPage extends MenuLinkDefault {
       $pluginDefinition,
       $container->get('menu_link.static.overrides'),
       $container->get('omnipedia.timeline'),
-      $container->get('omnipedia.wiki')
+      $container->get('omnipedia.wiki_node_main_page')
     );
   }
 
@@ -83,14 +83,14 @@ class MainPage extends MenuLinkDefault {
    * {@inheritdoc}
    */
   public function getRouteName() {
-    return $this->wiki->getMainPageRouteName();
+    return $this->wikiNodeMainPage->getMainPageRouteName();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getRouteParameters() {
-    return $this->wiki->getMainPageRouteParameters(
+    return $this->wikiNodeMainPage->getMainPageRouteParameters(
       $this->timeline->getDateFormatted('current', 'storage')
     );
   }
