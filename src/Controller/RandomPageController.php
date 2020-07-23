@@ -6,6 +6,9 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
+use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
+use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -29,6 +32,27 @@ class RandomPageController extends ControllerBase {
   protected $wiki;
 
   /**
+   * The Omnipedia wiki node main page service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
+   */
+  protected $wikiNodeMainPage;
+
+  /**
+   * The Omnipedia wiki node resolver service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
+   */
+  protected $wikiNodeResolver;
+
+  /**
+   * The Omnipedia wiki node tracker service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
+   */
+  protected $wikiNodeTracker;
+
+  /**
    * Controller constructor; saves dependencies.
    *
    * @param \Drupal\omnipedia_core\Service\TimelineInterface $timeline
@@ -36,13 +60,28 @@ class RandomPageController extends ControllerBase {
    *
    * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
    *   The Omnipedia wiki service.
+   *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
+   *   The Omnipedia wiki node main page service.
+   *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
+   *   The Omnipedia wiki node resolver service.
+   *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface $wikiNodeTracker
+   *   The Omnipedia wiki node tracker service.
    */
   public function __construct(
-    TimelineInterface $timeline,
-    WikiInterface     $wiki
+    TimelineInterface         $timeline,
+    WikiInterface             $wiki,
+    WikiNodeMainPageInterface $wikiNodeMainPage,
+    WikiNodeResolverInterface $wikiNodeResolver,
+    WikiNodeTrackerInterface  $wikiNodeTracker
   ) {
-    $this->timeline = $timeline;
-    $this->wiki     = $wiki;
+    $this->timeline         = $timeline;
+    $this->wiki             = $wiki;
+    $this->wikiNodeMainPage = $wikiNodeMainPage;
+    $this->wikiNodeResolver = $wikiNodeResolver;
+    $this->wikiNodeTracker  = $wikiNodeTracker;
   }
 
   /**
@@ -51,7 +90,10 @@ class RandomPageController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('omnipedia.timeline'),
-      $container->get('omnipedia.wiki')
+      $container->get('omnipedia.wiki'),
+      $container->get('omnipedia.wiki_node_main_page'),
+      $container->get('omnipedia.wiki_node_resolver'),
+      $container->get('omnipedia.wiki_node_tracker')
     );
   }
 
@@ -64,17 +106,44 @@ class RandomPageController extends ControllerBase {
    * @see \Drupal\Core\Controller\ControllerBase::redirect()
    *   Handles the redirect for us.
    *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::getRandomWikiNodeRouteParameters()
-   *   Determines the wiki node to view.
+   * @todo Check if this can leak the presence of nodes the user doesn't have
+   *   access to. While they can't visit nodes they don't have access to, if
+   *   there's ever an issue with permissions, this could leak URLs.
+   *
+   * @todo This should handle cases where no nodes are found as recent.
    */
   public function view(): RedirectResponse {
     /** @var string */
     $currentDate = $this->timeline->getDateFormatted('current', 'storage');
 
-    return $this->redirect(
-      'entity.node.canonical',
-      $this->wiki->getRandomWikiNodeRouteParameters($currentDate)
+    /** @var array */
+    $nodeData = $this->wikiNodeTracker->getTrackedWikiNodeData();
+
+    /** @var array */
+    $mainPageNids = $this->wikiNodeResolver
+      ->nodeOrTitleToNids($this->wikiNodeMainPage->getMainPage('default'));
+
+    /** @var array */
+    $viewedNids = $this->wiki->getRecentlyViewedWikiNodes();
+
+    /** @var array */
+    $nids = \array_filter(
+      $nodeData['dates'][$currentDate],
+      function($nid) use ($nodeData, $mainPageNids, $viewedNids) {
+        // This filters out unpublished nodes, main page nodes, and recently
+        // viewed wiki nodes.
+        return !(
+          !$nodeData['nodes'][$nid]['published'] ||
+          \in_array($nid, $mainPageNids) ||
+          \in_array($nid, $viewedNids)
+        );
+      }
     );
+
+    return $this->redirect('entity.node.canonical', [
+      // Return a random nid from the available nids.
+      'node' => $nids[\array_rand($nids)]
+    ]);
   }
 
 }
