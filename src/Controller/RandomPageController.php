@@ -5,10 +5,10 @@ namespace Drupal\omnipedia_menu\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
-use Drupal\omnipedia_core\Service\WikiInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
+use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -23,13 +23,6 @@ class RandomPageController extends ControllerBase {
    * @var \Drupal\omnipedia_core\Service\TimelineInterface
    */
   protected $timeline;
-
-  /**
-   * The Omnipedia wiki service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiInterface
-   */
-  protected $wiki;
 
   /**
    * The Omnipedia wiki node main page service.
@@ -53,13 +46,17 @@ class RandomPageController extends ControllerBase {
   protected $wikiNodeTracker;
 
   /**
+   * The Omnipedia wiki node viewed service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeViewedInterface
+   */
+  protected $wikiNodeViewed;
+
+  /**
    * Controller constructor; saves dependencies.
    *
    * @param \Drupal\omnipedia_core\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
-   *
-   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
-   *   The Omnipedia wiki service.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
    *   The Omnipedia wiki node main page service.
@@ -69,19 +66,22 @@ class RandomPageController extends ControllerBase {
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface $wikiNodeTracker
    *   The Omnipedia wiki node tracker service.
+   *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeViewedInterface $wikiNodeViewed
+   *   The Omnipedia wiki node viewed service.
    */
   public function __construct(
     TimelineInterface         $timeline,
-    WikiInterface             $wiki,
     WikiNodeMainPageInterface $wikiNodeMainPage,
     WikiNodeResolverInterface $wikiNodeResolver,
-    WikiNodeTrackerInterface  $wikiNodeTracker
+    WikiNodeTrackerInterface  $wikiNodeTracker,
+    WikiNodeViewedInterface   $wikiNodeViewed
   ) {
     $this->timeline         = $timeline;
-    $this->wiki             = $wiki;
     $this->wikiNodeMainPage = $wikiNodeMainPage;
     $this->wikiNodeResolver = $wikiNodeResolver;
     $this->wikiNodeTracker  = $wikiNodeTracker;
+    $this->wikiNodeViewed   = $wikiNodeViewed;
   }
 
   /**
@@ -90,10 +90,10 @@ class RandomPageController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('omnipedia.timeline'),
-      $container->get('omnipedia.wiki'),
       $container->get('omnipedia.wiki_node_main_page'),
       $container->get('omnipedia.wiki_node_resolver'),
-      $container->get('omnipedia.wiki_node_tracker')
+      $container->get('omnipedia.wiki_node_tracker'),
+      $container->get('omnipedia.wiki_node_viewed')
     );
   }
 
@@ -124,7 +124,7 @@ class RandomPageController extends ControllerBase {
       ->nodeOrTitleToNids($this->wikiNodeMainPage->getMainPage('default'));
 
     /** @var array */
-    $viewedNids = $this->wiki->getRecentlyViewedWikiNodes();
+    $viewedNids = $this->wikiNodeViewed->getNodes();
 
     /** @var array */
     $nids = \array_filter(
