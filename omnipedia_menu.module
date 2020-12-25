@@ -31,7 +31,7 @@ function omnipedia_menu_menu_local_tasks_alter(
   /** @var array */
   $routeParameters = $nodeLink['#link']['url']->getRouteParameters();
 
-  /** @var Drupal\omnipedia_core\Service\WikiNodeResolverInterface */
+  /** @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface */
   $wikiNodeResolver = \Drupal::service('omnipedia.wiki_node_resolver');
 
   /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
