@@ -1,5 +1,5 @@
 omnipedia_menu.random_page:
-  path: '/wiki/random'
+  path: '/wiki/Special:Random'
   defaults:
     _controller: '\Drupal\omnipedia_menu\Controller\RandomPageController::view'
   requirements:
