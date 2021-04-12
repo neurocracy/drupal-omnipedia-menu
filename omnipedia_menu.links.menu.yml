@@ -1,3 +1,12 @@
+# Note that this key must match the derivative prefix returned by
+# \Drupal\omnipedia_menu\Entity\WikiNodeMenuLink::getPluginId(), or else Drupal
+# will create two menu links for every entity: one matching this key and another
+# with the prefix returned by the above method.
+omnipedia_wiki_node_menu_link:
+  class: Drupal\omnipedia_menu\Plugin\Menu\WikiNodeMenuLink
+  form_class: Drupal\omnipedia_menu\Form\WikiNodeMenuLinkForm
+  deriver: Drupal\omnipedia_menu\Plugin\Deriver\WikiNodeMenuLinkDeriver
+
 main_page:
   class: Drupal\omnipedia_menu\Plugin\Menu\MainPage
   menu_name: main

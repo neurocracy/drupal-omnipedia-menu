@@ -1,0 +1,9 @@
+omnipedia_menu.add_wiki_node_menu_link_form:
+  route_name: entity.omnipedia_wiki_node_menu_link.add_link_form
+  title: 'Add wiki link'
+  # Use the Drupal core menu_ui module's class to add the redirect destination
+  # back to the current path, i.e. the menu overview, etc. Thankfully, the class
+  # does not restrict what link it's applied to, which is why this works.
+  class: \Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd
+  appears_on:
+    - entity.menu.edit_form

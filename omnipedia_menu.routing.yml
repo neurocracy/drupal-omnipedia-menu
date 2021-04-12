@@ -1,3 +1,35 @@
+entity.omnipedia_wiki_node_menu_link.add_link_form:
+  path: '/admin/structure/menu/manage/{menu}/add-wiki'
+  defaults:
+    _controller: '\Drupal\omnipedia_menu\Controller\WikiNodeMenuLinkController::addLink'
+    _title: 'Add wiki menu link'
+  requirements:
+    _entity_create_access: 'omnipedia_wiki_node_menu_link'
+
+entity.omnipedia_wiki_node_menu_link.canonical:
+  path: '/admin/structure/menu/wiki-item/{omnipedia_wiki_node_menu_link}/edit'
+  defaults:
+    _entity_form: 'omnipedia_wiki_node_menu_link.default'
+    _title: 'Edit wiki menu link'
+  requirements:
+    _entity_access: 'omnipedia_wiki_node_menu_link.update'
+
+entity.omnipedia_wiki_node_menu_link.edit_form:
+  path: '/admin/structure/menu/wiki-item/{omnipedia_wiki_node_menu_link}/edit'
+  defaults:
+    _entity_form: 'omnipedia_wiki_node_menu_link.default'
+    _title: 'Edit wiki menu link'
+  requirements:
+    _entity_access: 'omnipedia_wiki_node_menu_link.update'
+
+entity.omnipedia_wiki_node_menu_link.delete_form:
+  path: '/admin/structure/menu/wiki-item/{omnipedia_wiki_node_menu_link}/delete'
+  defaults:
+    _entity_form: 'omnipedia_wiki_node_menu_link.delete'
+    _title: 'Delete menu link'
+  requirements:
+    _entity_access: 'omnipedia_wiki_node_menu_link.delete'
+
 omnipedia_menu.random_page:
   path: '/wiki/Special:Random'
   defaults:
