@@ -30,6 +30,25 @@ interface WikiNodeMenuLinkInterface extends ContentEntityInterface, EntityChange
   public function getWikiNodeTitle();
 
   /**
+   * Get the fallback behaviour for this menu link.
+   *
+   * This indicates how the menu link should behave if a wiki node is not found
+   * for the user's current date.
+   *
+   * @return string
+   *   Can be one of:
+   *
+   *   - 'hide': indicates that this menu link should be hidden.
+   *
+   *   - 'last': indicates that this menu link should link to the last available
+   *     date.
+   *
+   *   - 'nolink': indicates that the link title should be output as unlinked
+   *     text.
+   */
+  public function getFallbackBehaviour(): string;
+
+  /**
    * Gets the title of the menu link.
    *
    * @return string

@@ -176,6 +176,29 @@ class WikiNodeMenuLink extends ContentEntityBase implements WikiNodeMenuLinkInte
       ])
       ->setDisplayConfigurable('form', true);
 
+    // This is currently unused but may be implemented in the future.
+    $fields['fallback_behaviour'] = BaseFieldDefinition::create('list_string')
+      ->setLabel(new TranslatableMarkup('Fallback behaviour'))
+      ->setDescription(new TranslatableMarkup(
+        'What to do when a wiki page is not available for the current date, either because it does not exist or the current user does not have access to it.'
+      ))
+      ->setSetting('max_length', 255)
+      ->setSetting('allowed_values', [
+        'hide'    => new TranslatableMarkup('Hide link'),
+        'last'    => new TranslatableMarkup('Last available date'),
+        'nolink'  => new TranslatableMarkup('Display as unlinked text'),
+      ])
+      ->setDefaultValue('hide')
+      ->setRequired(true);
+      // ->setDisplayOptions('form', [
+      //   'type'    => 'options_buttons',
+      //   'weight'  => -4,
+      // ])
+      // ->setDisplayOptions('view', [
+      //   'label'   => 'above',
+      //   'weight'  => -4,
+      // ]);
+
     $fields['weight'] = BaseFieldDefinition::create('integer')
       ->setLabel(new TranslatableMarkup('Weight'))
       ->setDescription(new TranslatableMarkup(
@@ -281,6 +304,13 @@ class WikiNodeMenuLink extends ContentEntityBase implements WikiNodeMenuLinkInte
   /**
    * {@inheritdoc}
    */
+  public function getFallbackBehaviour(): string {
+    return $this->get('fallback_behaviour')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getTitle() {
     return $this->get('title')->value;
   }
@@ -359,8 +389,9 @@ class WikiNodeMenuLink extends ContentEntityBase implements WikiNodeMenuLinkInte
       'discovered'  => 0,
       'parent'      => $this->getParentId(),
       'metadata'    => [
-        'entity_id'       => $this->id(),
-        'wiki_node_title' => $this->getWikiNodeTitle(),
+        'entity_id'           => $this->id(),
+        'wiki_node_title'     => $this->getWikiNodeTitle(),
+        'fallback_behaviour'  => $this->getFallbackBehaviour(),
       ],
     ];
 
