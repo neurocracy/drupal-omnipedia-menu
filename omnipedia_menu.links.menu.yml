@@ -7,11 +7,6 @@ omnipedia_wiki_node_menu_link:
   form_class: Drupal\omnipedia_menu\Form\WikiNodeMenuLinkForm
   deriver: Drupal\omnipedia_menu\Plugin\Deriver\WikiNodeMenuLinkDeriver
 
-main_page:
-  class: Drupal\omnipedia_menu\Plugin\Menu\MainPage
-  menu_name: main
-  title: 'Main page'
-
 random_page:
   route_name: omnipedia_menu.random_page
   menu_name: main
