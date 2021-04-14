@@ -30,6 +30,14 @@ entity.omnipedia_wiki_node_menu_link.delete_form:
   requirements:
     _entity_access: 'omnipedia_wiki_node_menu_link.delete'
 
+omnipedia_menu.wiki_node_menu_link_autocomplete:
+  path: '/admin/structure/menu/wiki-item/wiki-node-title-autocomplete'
+  defaults:
+    _controller: '\Drupal\omnipedia_menu\Controller\WikiNodeMenuLinkController::wikiNodeTitleAutocomplete'
+    _format: json
+  requirements:
+    _permission: 'administer menu'
+
 omnipedia_menu.random_page:
   path: '/wiki/Special:Random'
   defaults:

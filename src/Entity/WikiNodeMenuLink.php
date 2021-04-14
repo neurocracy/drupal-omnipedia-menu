@@ -171,8 +171,11 @@ class WikiNodeMenuLink extends ContentEntityBase implements WikiNodeMenuLinkInte
         'weight'  => -5,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-        'weight' => -5,
+        'type'    => 'string_textfield',
+        'weight'  => -5,
+        // @see \Drupal\omnipedia_menu\Form\WikiNodeMenuLinkForm::form()
+        //   Sets autocomplete, because it doesn't seem to be possible here in
+        //   base field definitions.
       ])
       ->setDisplayConfigurable('form', true);
 

@@ -117,6 +117,18 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
     );
     $form['menu_parent']['#attributes']['class'][] = 'menu-title-select';
 
+    // This adds the autocomplete route to the wiki node title. Ideally, this
+    // would be done in WikiNodeMenuLink::baseFieldDefinitions(), but that
+    // doesn't seem possible.
+    if (isset($form['wiki_node_title']['widget'])) {
+      for (
+        $i = 0; $i < $form['wiki_node_title']['widget']['#cardinality']; $i++
+      ) {
+        $form['wiki_node_title']['widget'][$i]['value']['#autocomplete_route_name'] =
+          'omnipedia_menu.wiki_node_menu_link_autocomplete';
+      }
+    }
+
     return $form;
   }
 
