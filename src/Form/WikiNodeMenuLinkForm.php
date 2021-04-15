@@ -7,9 +7,7 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
-// use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
-use Drupal\Core\Path\PathValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,13 +35,6 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
   protected $menuParentSelector;
 
   /**
-   * The Drupal path validator.
-   *
-   * @var \Drupal\Core\Path\PathValidatorInterface
-   */
-  protected $pathValidator;
-
-  /**
    * Constructs this form; saves dependencies.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
@@ -51,12 +42,6 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
    *
    * @param \Drupal\Core\Menu\MenuParentFormSelectorInterface $menuParentSelector
    *   The Drupal menu parent form selector service.
-   *
-   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
-   *   The Drupal language manager.
-   *
-   * @param \Drupal\Core\Path\PathValidatorInterface $pathValidator
-   *   The Drupal path validator.
    *
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entityTypeBundleInfo
    *   The Drupal entity type bundle info service.
@@ -67,15 +52,12 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
   public function __construct(
     EntityRepositoryInterface       $entityRepository,
     MenuParentFormSelectorInterface $menuParentSelector,
-    // LanguageManagerInterface        $languageManager,
-    PathValidatorInterface          $pathValidator,
     EntityTypeBundleInfoInterface   $entityTypeBundleInfo = null,
     TimeInterface                   $time = null
   ) {
     parent::__construct($entityRepository, $entityTypeBundleInfo, $time);
 
     $this->menuParentSelector = $menuParentSelector;
-    $this->pathValidator = $pathValidator;
   }
 
   /**
@@ -85,8 +67,6 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
     return new static(
       $container->get('entity.repository'),
       $container->get('menu.parent_form_selector'),
-      // $container->get('language_manager'),
-      $container->get('path.validator'),
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time')
     );
