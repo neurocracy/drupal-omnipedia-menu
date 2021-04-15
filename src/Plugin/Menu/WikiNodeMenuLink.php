@@ -24,6 +24,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WikiNodeMenuLink extends MenuLinkDefault {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $overrideAllowed = [
+    'menu_name'         => 1,
+    'parent'            => 1,
+    'weight'            => 1,
+    'expanded'          => 1,
+    'enabled'           => 1,
+    'title'             => 1,
+    'description'       => 1,
+    'route_name'        => 1,
+    'route_parameters'  => 1,
+    'url'               => 1,
+    'options'           => 1,
+  ];
+
+  /**
    * The wiki node menu link entity associated with this plug-in.
    *
    * @var \Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface|null
@@ -309,6 +326,35 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    */
   public function isTranslatable() {
     return $this->getEntity()->isTranslatable();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateLink(array $newDefinitionValues, $persist) {
+
+    // Filter the list of updates to only those that are allowed.
+    $overrides = \array_intersect_key(
+      $newDefinitionValues, $this->overrideAllowed
+    );
+
+    // Update the definition.
+    $this->pluginDefinition = $overrides + $this->getPluginDefinition();
+
+    if ($persist) {
+
+      $entity = $this->getEntity();
+
+      foreach ($overrides as $key => $value) {
+        $entity->{$key}->value = $value;
+      }
+
+      $entity->save();
+
+    }
+
+    return $this->pluginDefinition;
+
   }
 
   /**
