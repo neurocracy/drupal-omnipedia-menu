@@ -164,6 +164,7 @@ class WikiNodeMenuLink extends ContentEntityBase implements WikiNodeMenuLinkInte
       ->setRequired(true)
       ->setTranslatable(true)
       ->setRevisionable(true)
+      ->addConstraint('WikiNodeMenuLinkNodeTitle')
       ->setSetting('max_length', 255)
       ->setDisplayOptions('view', [
         'label'   => 'hidden',
