@@ -8,9 +8,8 @@ use Drupal\omnipedia_core\Entity\Node;
 /**
  * Implements hook_help().
  */
-function omnipedia_menu_help(
-  $routeName, RouteMatchInterface $routeMatch
-) {
+function omnipedia_menu_help($routeName, RouteMatchInterface $routeMatch) {
+
   switch ($routeName) {
     case 'entity.omnipedia_wiki_node_menu_link.add_link_form':
     case 'entity.omnipedia_wiki_node_menu_link.canonical':
@@ -33,6 +32,7 @@ function omnipedia_menu_help(
         ) . '</p>';
       }
   }
+
 }
 
 /**
