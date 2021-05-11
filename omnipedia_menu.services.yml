@@ -1,0 +1,11 @@
+services:
+
+  # Event subscriber to remove contextual links on wiki node view routes.
+  omnipedia_menu.entity_remove_node_route_contextual_links_event_subscriber:
+    class: Drupal\omnipedia_menu\EventSubscriber\Entity\RemoveWikiNodeRouteContextualLinksEventSubscriber
+    arguments:
+      - '@current_route_match'
+      - '@omnipedia.wiki_node_resolver'
+      - '@omnipedia.wiki_node_route'
+    tags:
+      - { name: 'event_subscriber' }
