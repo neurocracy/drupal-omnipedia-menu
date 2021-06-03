@@ -2,9 +2,13 @@
 
 namespace Drupal\omnipedia_menu\Controller;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
+use Drupal\omnipedia_core\Service\WikiNodeAccessInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
@@ -30,6 +34,13 @@ class RandomPageController extends ControllerBase {
    * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
    */
   protected $wikiNodeMainPage;
+
+  /**
+   * The Omnipedia wiki node access service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeAccessInterface
+   */
+  protected $wikiNodeAccess;
 
   /**
    * The Omnipedia wiki node resolver service.
@@ -58,6 +69,9 @@ class RandomPageController extends ControllerBase {
    * @param \Drupal\omnipedia_core\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeAccessInterface $wikiNodeAccess
+   *   The Omnipedia wiki node access service.
+   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
    *   The Omnipedia wiki node main page service.
    *
@@ -72,12 +86,14 @@ class RandomPageController extends ControllerBase {
    */
   public function __construct(
     TimelineInterface         $timeline,
+    WikiNodeAccessInterface   $wikiNodeAccess,
     WikiNodeMainPageInterface $wikiNodeMainPage,
     WikiNodeResolverInterface $wikiNodeResolver,
     WikiNodeTrackerInterface  $wikiNodeTracker,
     WikiNodeViewedInterface   $wikiNodeViewed
   ) {
     $this->timeline         = $timeline;
+    $this->wikiNodeAccess   = $wikiNodeAccess;
     $this->wikiNodeMainPage = $wikiNodeMainPage;
     $this->wikiNodeResolver = $wikiNodeResolver;
     $this->wikiNodeTracker  = $wikiNodeTracker;
@@ -90,11 +106,32 @@ class RandomPageController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('omnipedia.timeline'),
+      $container->get('omnipedia.wiki_node_access'),
       $container->get('omnipedia.wiki_node_main_page'),
       $container->get('omnipedia.wiki_node_resolver'),
       $container->get('omnipedia.wiki_node_tracker'),
       $container->get('omnipedia.wiki_node_viewed')
     );
+  }
+
+  /**
+   * Checks access for the route.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Run access checks for this account.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result. Access is granted if $account can access at least one
+   *   wiki node.
+   *
+   * @todo Can/should we vary this per wiki date?
+   */
+  public function access(AccountInterface $account): AccessResultInterface {
+
+    return AccessResult::allowedIf(
+      $this->wikiNodeAccess->canUserAccessAnyWikiNode($account)
+    )->cachePerUser();
+
   }
 
   /**

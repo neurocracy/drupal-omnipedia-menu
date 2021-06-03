@@ -43,4 +43,4 @@ omnipedia_menu.random_page:
   defaults:
     _controller: '\Drupal\omnipedia_menu\Controller\RandomPageController::view'
   requirements:
-    _permission: 'access content'
+    _custom_access: '\Drupal\omnipedia_menu\Controller\RandomPageController::access'
