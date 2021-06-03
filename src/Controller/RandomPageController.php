@@ -5,7 +5,6 @@ namespace Drupal\omnipedia_menu\Controller;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiNodeAccessInterface;
