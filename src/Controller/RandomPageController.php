@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeStorageInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiNodeAccessInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
@@ -19,6 +20,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Controller for the 'omnipedia_menu.random_page' route.
  */
 class RandomPageController extends ControllerBase {
+
+  /**
+   * The Drupal node entity storage.
+   *
+   * @var \Drupal\node\NodeStorageInterface
+   */
+  protected $nodeStorage;
 
   /**
    * The Omnipedia timeline service.
@@ -65,6 +73,9 @@ class RandomPageController extends ControllerBase {
   /**
    * Controller constructor; saves dependencies.
    *
+   * @param \Drupal\node\NodeStorageInterface $nodeStorage
+   *   The Drupal node entity storage.
+   *
    * @param \Drupal\omnipedia_core\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
    *
@@ -84,6 +95,7 @@ class RandomPageController extends ControllerBase {
    *   The Omnipedia wiki node viewed service.
    */
   public function __construct(
+    NodeStorageInterface      $nodeStorage,
     TimelineInterface         $timeline,
     WikiNodeAccessInterface   $wikiNodeAccess,
     WikiNodeMainPageInterface $wikiNodeMainPage,
@@ -91,6 +103,7 @@ class RandomPageController extends ControllerBase {
     WikiNodeTrackerInterface  $wikiNodeTracker,
     WikiNodeViewedInterface   $wikiNodeViewed
   ) {
+    $this->nodeStorage      = $nodeStorage;
     $this->timeline         = $timeline;
     $this->wikiNodeAccess   = $wikiNodeAccess;
     $this->wikiNodeMainPage = $wikiNodeMainPage;
@@ -104,6 +117,7 @@ class RandomPageController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('entity_type.manager')->getStorage('node'),
       $container->get('omnipedia.timeline'),
       $container->get('omnipedia.wiki_node_access'),
       $container->get('omnipedia.wiki_node_main_page'),
@@ -145,12 +159,9 @@ class RandomPageController extends ControllerBase {
    * @see https://www.php.net/manual/en/function.shuffle.php
    *   Can we use the built-in PHP \shuffle() function to create a playlist of
    *   wiki nodes rather than this current method of randomization?
-   *
-   * @todo Check if this can leak the presence of nodes the user doesn't have
-   *   access to. While they can't visit nodes they don't have access to, if
-   *   there's ever an issue with permissions, this could leak URLs.
    */
   public function view(): RedirectResponse {
+
     /** @var string */
     $currentDate = $this->timeline->getDateFormatted('current', 'storage');
 
@@ -163,17 +174,16 @@ class RandomPageController extends ControllerBase {
     /** @var string */
     $currentDateMainPageNid = $currentDateMainPage->nid->getString();
 
-    // Array of all published nids for the current date, including the main page
-    // and recently viewed nodes. Note that \array_values() is needed to ensure
-    // the keys are integers and not strings.
+    // Array of all node IDs (nids) for the current date that the current user
+    // has access to, including the main page and recently viewed nodes; the
+    // node entity query applies access checks by default for us. Note that
+    // \array_values() is needed to ensure the keys are integers and not
+    // strings.
     /** @var array */
-    $currentDateNids = \array_values(\array_filter(
-      $nodeData['dates'][$currentDate],
-      function($nid) use ($nodeData) {
-        // This filters out unpublished nodes.
-        return $nodeData['nodes'][$nid]['published'];
-      }
-    ));
+    $currentDateNids = \array_values(($this->nodeStorage->getQuery())
+      ->condition('nid', $nodeData['dates'][$currentDate], 'IN')
+      ->execute()
+    );
 
     // If there at least 3 nodes for the current date, remove the main page so
     // that it can't be picked. If there are two nodes, alternating between the
@@ -223,6 +233,7 @@ class RandomPageController extends ControllerBase {
       // Return a random nid from the available nids.
       'node' => $nids[\array_rand($nids)]
     ]);
+
   }
 
 }
