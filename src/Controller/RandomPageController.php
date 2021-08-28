@@ -158,7 +158,8 @@ class RandomPageController extends ControllerBase {
    *
    * @see https://www.php.net/manual/en/function.shuffle.php
    *   Can we use the built-in PHP \shuffle() function to create a playlist of
-   *   wiki nodes rather than this current method of randomization?
+   *   wiki nodes ahead of time rather than the current method of randomization
+   *   at time of invoking this controller?
    */
   public function view(): RedirectResponse {
 
@@ -229,9 +230,16 @@ class RandomPageController extends ControllerBase {
       $nids = [$currentDateMainPageNid];
     }
 
+    // We have to make a copy of the array as \shuffle() modifies the array you
+    // pass it rather than returning a shuffled copy.
+    $shuffled = $nids;
+
+    \shuffle($shuffled);
+
     return $this->redirect('entity.node.canonical', [
-      // Return a random nid from the available nids.
-      'node' => $nids[\array_rand($nids)]
+      // Return the first element from the shuffled list of available node IDs
+      // (nids).
+      'node' => $shuffled[0],
     ]);
 
   }
