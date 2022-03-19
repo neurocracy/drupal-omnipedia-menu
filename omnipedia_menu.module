@@ -14,52 +14,13 @@ function omnipedia_menu_help($routeName, RouteMatchInterface $routeMatch) {
 }
 
 /**
- * Implements hook_menu_local_tasks_alter().
- *
- * This replaces the "View" tab content to either the main page title (if the
- * tab points to a main page wiki node), or "Article" for all other wiki page
- * nodes.
- *
- * @see \Drupal\omnipedia_core\Service\WikiNodeResolverInterface::getWikiNode()
- *   Used to load a wiki node and filter out any non-wiki nodes.
- *
- * @see \Drupal\omnipedia_core\Entity\NodeInterface::isMainPage()
- *   Used to determine if the route parameter is a main page wiki node.
+ * Implements \hook_menu_local_tasks_alter().
  */
 function omnipedia_menu_menu_local_tasks_alter(
   array &$data, string $routeName,
   RefinableCacheableDependencyInterface &$cacheability
 ): void {
-  // Bail if no 'entity.node.canonical' route is found in the tabs, which is the
-  // "View" page for nodes.
-  if (!isset($data['tabs'][0]['entity.node.canonical'])) {
-    return;
-  }
-
-  /** @var array */
-  $nodeLink = &$data['tabs'][0]['entity.node.canonical'];
-
-  /** @var array */
-  $routeParameters = $nodeLink['#link']['url']->getRouteParameters();
-
-  /** @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface */
-  $wikiNodeResolver = \Drupal::service('omnipedia.wiki_node_resolver');
-
-  /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-  $node = $wikiNodeResolver->getWikiNode($routeParameters['node']);
-
-  if (\is_null($node)) {
-    return;
-  }
-
-  // If the wiki page is a main page, use its title as the tab title, to match
-  // Wikipedia.
-  if ($node->isMainPage()) {
-    $nodeLink['#link']['title'] = $node->getTitle();
-
-  // Otherwise, just set the tab title to "Article", matching Wikipedia for all
-  // other pages.
-  } else {
-    $nodeLink['#link']['title'] = \t('Article');
-  }
+  \Drupal::service('omnipedia_menu.wiki_node_local_tasks_alter')->alter(
+    $data, $routeName, $cacheability
+  );
 }
