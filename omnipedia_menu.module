@@ -3,36 +3,14 @@
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\omnipedia_core\Entity\Node;
 
 /**
- * Implements hook_help().
+ * Implements \hook_help().
  */
 function omnipedia_menu_help($routeName, RouteMatchInterface $routeMatch) {
-
-  switch ($routeName) {
-    case 'entity.omnipedia_wiki_node_menu_link.add_link_form':
-    case 'entity.omnipedia_wiki_node_menu_link.canonical':
-    case 'entity.omnipedia_wiki_node_menu_link.edit_form':
-
-      /** @var \Drupal\Core\Url */
-      $contentAdminUrl = Url::fromRoute(
-        'system.admin_content', ['type' => Node::getWikiNodeType()]
-      );
-
-      if ($contentAdminUrl->access() === true) {
-        return '<p>' . \t(
-          'This menu link type will always point to the current date\'s revision of <a href=":contentAdminUrl">a wiki page</a>.',
-          [':contentAdminUrl' => $contentAdminUrl->toString()]
-        ) . '</p>';
-
-      } else {
-        return '<p>' . \t(
-          'This menu link type will always point to the current date\'s revision of a wiki page.'
-        ) . '</p>';
-      }
-  }
-
+  return \Drupal::service('omnipedia_menu.help')->help(
+    $routeName, $routeMatch
+  );
 }
 
 /**
