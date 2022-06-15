@@ -10,8 +10,8 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\MenuLinkDefault;
 use Drupal\Core\Menu\StaticMenuLinkOverridesInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
-use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
+use Drupal\omnipedia_date\Service\TimelineInterface;
 use Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -64,7 +64,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
   /**
    * The Omnipedia timeline service.
    *
-   * @var \Drupal\omnipedia_core\Service\TimelineInterface
+   * @var \Drupal\omnipedia_date\Service\TimelineInterface
    */
   protected $timeline;
 
@@ -102,7 +102,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The Drupal language manager.
    *
-   * @param \Drupal\omnipedia_core\Service\TimelineInterface $timeline
+   * @param \Drupal\omnipedia_date\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $wikiNodeMenuLinkStorage
