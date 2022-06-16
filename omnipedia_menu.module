@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;

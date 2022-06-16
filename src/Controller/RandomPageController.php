@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\omnipedia_menu\Controller;
 
 use Drupal\Core\Access\AccessResult;

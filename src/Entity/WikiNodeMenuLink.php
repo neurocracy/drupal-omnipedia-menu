@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\omnipedia_menu\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
