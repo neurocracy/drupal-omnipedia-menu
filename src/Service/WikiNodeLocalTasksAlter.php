@@ -24,7 +24,7 @@ class WikiNodeLocalTasksAlter {
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wikiNodeResolver;
+  protected WikiNodeResolverInterface $wikiNodeResolver;
 
   /**
    * Service constructor; saves dependencies.

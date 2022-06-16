@@ -47,28 +47,28 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    *
    * @var \Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface|null
    */
-  protected $entity;
+  protected ?WikiNodeMenuLinkInterface $entity = null;
 
   /**
    * The Drupal entity repository.
    *
    * @var \Drupal\Core\Entity\EntityRepositoryInterface
    */
-  protected $entityRepository;
+  protected EntityRepositoryInterface $entityRepository;
 
   /**
    * The Drupal language manager.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
-  protected $languageManager;
+  protected LanguageManagerInterface $languageManager;
 
   /**
    * The Omnipedia timeline service.
    *
    * @var \Drupal\omnipedia_date\Service\TimelineInterface
    */
-  protected $timeline;
+  protected TimelineInterface $timeline;
 
   /**
    * The wiki node associated with this menu link, if any.
@@ -79,21 +79,21 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    *
    * @var \Drupal\omnipedia_core\Entity\NodeInterface|null|false
    */
-  protected $wikiNode = false;
+  protected NodeInterface|null|bool $wikiNode = false;
 
   /**
    * The WikiNodeMenuLink entity storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $wikiNodeMenuLinkStorage;
+  protected EntityStorageInterface $wikiNodeMenuLinkStorage;
 
   /**
    * The Omnipedia wiki node revision service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
    */
-  protected $wikiNodeRevision;
+  protected WikiNodeRevisionInterface $wikiNodeRevision;
 
   /**
    * {@inheritdoc}

@@ -34,7 +34,7 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
    *
    * @var \Drupal\Core\Menu\MenuParentFormSelectorInterface
    */
-  protected $menuParentSelector;
+  protected MenuParentFormSelectorInterface $menuParentSelector;
 
   /**
    * Constructs this form; saves dependencies.

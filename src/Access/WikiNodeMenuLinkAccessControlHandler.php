@@ -27,7 +27,7 @@ class WikiNodeMenuLinkAccessControlHandler extends EntityAccessControlHandler im
    *
    * @var \Drupal\Core\Access\AccessManagerInterface
    */
-  protected $accessManager;
+  protected AccessManagerInterface $accessManager;
 
   /**
    * Creates a new WikiNodeMenuLinkAccessControlHandler.

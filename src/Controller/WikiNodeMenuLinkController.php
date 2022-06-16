@@ -24,14 +24,14 @@ class WikiNodeMenuLinkController extends ControllerBase {
    *
    * @var \Drupal\node\NodeStorageInterface
    */
-  protected $nodeStorage;
+  protected NodeStorageInterface $nodeStorage;
 
   /**
    * The Omnipedia wiki node tracker service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
    */
-  protected $wikiNodeTracker;
+  protected WikiNodeTrackerInterface $wikiNodeTracker;
 
   /**
    * Constructs this controller; saves dependencies.

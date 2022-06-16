@@ -83,7 +83,7 @@ class WikiNodeMenuLink extends ContentEntityBase implements WikiNodeMenuLinkInte
    *
    * @var bool
    */
-  protected $insidePlugin = false;
+  protected bool $insidePlugin = false;
 
   /**
    * {@inheritdoc}
@@ -296,14 +296,14 @@ class WikiNodeMenuLink extends ContentEntityBase implements WikiNodeMenuLinkInte
   /**
    * {@inheritdoc}
    */
-  public function setInsidePlugin() {
+  public function setInsidePlugin(): void {
     $this->insidePlugin = true;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getWikiNodeTitle() {
+  public function getWikiNodeTitle(): string {
     return $this->get('wiki_node_title')->value;
   }
 
@@ -317,49 +317,49 @@ class WikiNodeMenuLink extends ContentEntityBase implements WikiNodeMenuLinkInte
   /**
    * {@inheritdoc}
    */
-  public function getTitle() {
+  public function getTitle(): string {
     return $this->get('title')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getMenuName() {
+  public function getMenuName(): string {
     return $this->get('menu_name')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDescription() {
+  public function getDescription(): ?string {
     return $this->get('description')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPluginId() {
+  public function getPluginId(): string {
     return 'omnipedia_wiki_node_menu_link:' . $this->uuid();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isEnabled() {
+  public function isEnabled(): bool {
     return (bool) $this->get('enabled')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isExpanded() {
+  public function isExpanded(): bool {
     return (bool) $this->get('expanded')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getParentId() {
+  public function getParentId(): string {
     // Cast the parent ID to a string, only an empty string means no parent,
     // null keeps the existing parent.
     return (string) $this->get('parent')->value;
@@ -368,14 +368,14 @@ class WikiNodeMenuLink extends ContentEntityBase implements WikiNodeMenuLinkInte
   /**
    * {@inheritdoc}
    */
-  public function getWeight() {
+  public function getWeight(): int {
     return (int) $this->get('weight')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPluginDefinition() {
+  public function getPluginDefinition(): array {
 
     return [
       // @todo Can we read the classes from the omnipedia_menu.links.menu.yml

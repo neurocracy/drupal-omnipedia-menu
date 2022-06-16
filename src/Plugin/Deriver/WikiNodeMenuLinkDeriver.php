@@ -19,7 +19,7 @@ class WikiNodeMenuLinkDeriver extends DeriverBase implements ContainerDeriverInt
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $wikiNodeMenuLinkStorage;
+  protected EntityStorageInterface $wikiNodeMenuLinkStorage;
 
   /**
    * Constructs this deriver; saves dependencies.

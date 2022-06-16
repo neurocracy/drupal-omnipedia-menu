@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -9,7 +10,9 @@ use Drupal\Core\Url;
 /**
  * Implements \hook_help().
  */
-function omnipedia_menu_help($routeName, RouteMatchInterface $routeMatch) {
+function omnipedia_menu_help(
+  string $routeName, RouteMatchInterface $routeMatch
+): MarkupInterface|array|string {
   return \Drupal::service('omnipedia_menu.help')->help(
     $routeName, $routeMatch
   );

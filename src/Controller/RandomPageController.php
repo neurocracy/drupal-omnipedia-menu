@@ -28,49 +28,49 @@ class RandomPageController extends ControllerBase {
    *
    * @var \Drupal\node\NodeStorageInterface
    */
-  protected $nodeStorage;
+  protected NodeStorageInterface $nodeStorage;
 
   /**
    * The Omnipedia timeline service.
    *
    * @var \Drupal\omnipedia_date\Service\TimelineInterface
    */
-  protected $timeline;
+  protected TimelineInterface $timeline;
 
   /**
    * The Omnipedia wiki node main page service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
    */
-  protected $wikiNodeMainPage;
+  protected WikiNodeMainPageInterface $wikiNodeMainPage;
 
   /**
    * The Omnipedia wiki node access service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeAccessInterface
    */
-  protected $wikiNodeAccess;
+  protected WikiNodeAccessInterface $wikiNodeAccess;
 
   /**
    * The Omnipedia wiki node resolver service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wikiNodeResolver;
+  protected WikiNodeResolverInterface $wikiNodeResolver;
 
   /**
    * The Omnipedia wiki node tracker service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
    */
-  protected $wikiNodeTracker;
+  protected WikiNodeTrackerInterface $wikiNodeTracker;
 
   /**
    * The Omnipedia wiki node viewed service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeViewedInterface
    */
-  protected $wikiNodeViewed;
+  protected WikiNodeViewedInterface $wikiNodeViewed;
 
   /**
    * Controller constructor; saves dependencies.

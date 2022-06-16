@@ -21,21 +21,21 @@ class RemoveWikiNodeRouteContextualLinksEventSubscriber implements EventSubscrib
    *
    * @var \Drupal\Core\Routing\StackedRouteMatchInterface
    */
-  protected $currentRouteMatch;
+  protected StackedRouteMatchInterface $currentRouteMatch;
 
   /**
    * The Omnipedia wiki node resolver service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wikiNodeResolver;
+  protected WikiNodeResolverInterface $wikiNodeResolver;
 
   /**
    * The Omnipedia wiki node route service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeRouteInterface
    */
-  protected $wikiNodeRoute;
+  protected WikiNodeRouteInterface $wikiNodeRoute;
 
   /**
    * Event subscriber constructor; saves dependencies.
@@ -79,7 +79,9 @@ class RemoveWikiNodeRouteContextualLinksEventSubscriber implements EventSubscrib
    * @param \Drupal\core_event_dispatcher\Event\Entity\EntityViewAlterEvent $event
    *   The event object.
    */
-  public function removeWikiNodeContextualLinks(EntityViewAlterEvent $event) {
+  public function removeWikiNodeContextualLinks(
+    EntityViewAlterEvent $event
+  ): void {
 
     /** @var \Drupal\Core\Entity\EntityInterface */
     $entity = $event->getEntity();

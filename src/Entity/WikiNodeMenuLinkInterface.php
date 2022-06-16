@@ -21,7 +21,7 @@ interface WikiNodeMenuLinkInterface extends ContentEntityInterface, EntityChange
   /**
    * Flags this instance as being wrapped in a menu link plugin instance.
    */
-  public function setInsidePlugin();
+  public function setInsidePlugin(): void;
 
   /**
    * Gets the wiki node title associated with this menu link.
@@ -29,7 +29,7 @@ interface WikiNodeMenuLinkInterface extends ContentEntityInterface, EntityChange
    * @return string
    *   The title of the wiki node.
    */
-  public function getWikiNodeTitle();
+  public function getWikiNodeTitle(): string;
 
   /**
    * Get the fallback behaviour for this menu link.
@@ -56,7 +56,7 @@ interface WikiNodeMenuLinkInterface extends ContentEntityInterface, EntityChange
    * @return string
    *   The title of the link.
    */
-  public function getTitle();
+  public function getTitle(): string;
 
   /**
    * Gets the menu name of the custom menu link.
@@ -64,15 +64,16 @@ interface WikiNodeMenuLinkInterface extends ContentEntityInterface, EntityChange
    * @return string
    *   The menu ID.
    */
-  public function getMenuName();
+  public function getMenuName(): string;
 
   /**
    * Gets the description of the menu link for the UI.
    *
-   * @return string
-   *   The description to use on admin pages or as a title attribute.
+   * @return string|null
+   *   The description to use on admin pages or as a title attribute, or null if
+   *   one wasn't set.
    */
-  public function getDescription();
+  public function getDescription(): ?string;
 
   /**
    * Gets the menu plug-in ID associated with this entity.
@@ -80,7 +81,7 @@ interface WikiNodeMenuLinkInterface extends ContentEntityInterface, EntityChange
    * @return string
    *   The plug-in ID.
    */
-  public function getPluginId();
+  public function getPluginId(): string;
 
   /**
    * Returns whether the menu link is marked as enabled.
@@ -88,7 +89,7 @@ interface WikiNodeMenuLinkInterface extends ContentEntityInterface, EntityChange
    * @return bool
    *   True if is enabled, false otherwise.
    */
-  public function isEnabled();
+  public function isEnabled(): bool;
 
   /**
    * Returns whether the menu link is marked as always expanded.
@@ -96,7 +97,7 @@ interface WikiNodeMenuLinkInterface extends ContentEntityInterface, EntityChange
    * @return bool
    *   True for expanded, false otherwise.
    */
-  public function isExpanded();
+  public function isExpanded(): bool;
 
   /**
    * Gets the plug-in ID of the parent menu link.
@@ -104,7 +105,7 @@ interface WikiNodeMenuLinkInterface extends ContentEntityInterface, EntityChange
    * @return string
    *   A plug-in ID, or empty string if this link is at the top level.
    */
-  public function getParentId();
+  public function getParentId(): string;
 
   /**
    * Returns the weight of the menu link content entity.
@@ -112,7 +113,7 @@ interface WikiNodeMenuLinkInterface extends ContentEntityInterface, EntityChange
    * @return int
    *   A weight for use when ordering links.
    */
-  public function getWeight();
+  public function getWeight(): int;
 
   /**
    * Builds up the menu link plug-in definition for this entity.
@@ -122,6 +123,6 @@ interface WikiNodeMenuLinkInterface extends ContentEntityInterface, EntityChange
    *
    * @see \Drupal\Core\Menu\MenuLinkTree::$defaults
    */
-  public function getPluginDefinition();
+  public function getPluginDefinition(): array;
 
 }

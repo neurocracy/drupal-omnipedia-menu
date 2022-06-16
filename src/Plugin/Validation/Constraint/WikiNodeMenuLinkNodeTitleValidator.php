@@ -22,7 +22,7 @@ class WikiNodeMenuLinkNodeTitleValidator extends ConstraintValidator implements 
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
    */
-  protected $wikiNodeTracker;
+  protected WikiNodeTrackerInterface $wikiNodeTracker;
 
   /**
    * Constructs this validator; saves dependencies.
