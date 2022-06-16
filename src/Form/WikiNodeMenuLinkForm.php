@@ -54,8 +54,8 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
   public function __construct(
     EntityRepositoryInterface       $entityRepository,
     MenuParentFormSelectorInterface $menuParentSelector,
-    EntityTypeBundleInfoInterface   $entityTypeBundleInfo = null,
-    TimeInterface                   $time = null
+    EntityTypeBundleInfoInterface   $entityTypeBundleInfo,
+    TimeInterface                   $time
   ) {
     parent::__construct($entityRepository, $entityTypeBundleInfo, $time);
 
