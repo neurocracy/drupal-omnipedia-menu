@@ -59,7 +59,7 @@ class WikiNodeLocalTasksAlter {
    * @param RefinableCacheableDependencyInterface &$cacheability
    *   The cacheability metadata for the current route's local tasks.
    *
-   * @see \Drupal\omnipedia_core\Service\WikiNodeResolverInterface::getWikiNode()
+   * @see \Drupal\omnipedia_core\Service\WikiNodeResolverInterface::resolveWikiNode()
    *   Used to load a wiki node and filter out any non-wiki nodes.
    *
    * @see \Drupal\omnipedia_core\Entity\NodeInterface::isMainPage()
@@ -86,7 +86,7 @@ class WikiNodeLocalTasksAlter {
     $routeParameters = $nodeLink['#link']['url']->getRouteParameters();
 
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->wikiNodeResolver->getWikiNode($routeParameters['node']);
+    $node = $this->wikiNodeResolver->resolveWikiNode($routeParameters['node']);
 
     if (\is_null($node)) {
       return;
