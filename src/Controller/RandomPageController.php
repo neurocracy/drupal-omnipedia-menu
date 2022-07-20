@@ -145,7 +145,7 @@ class RandomPageController extends ControllerBase {
 
     return AccessResult::allowedIf(
       $this->wikiNodeAccess->canUserAccessAnyWikiNode($account)
-    )->cachePerUser();
+    );
 
   }
 
