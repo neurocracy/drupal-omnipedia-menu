@@ -65,3 +65,11 @@ Then, in your root ```composer.json```, add the following to the
 Then, in your project's root, run ```composer require
 "drupal/omnipedia_menu:3.x-dev@dev"``` to have Composer install the module
 and its required dependencies for you.
+
+## Patches
+
+This module provides [a Drupal core
+patch](https://www.drupal.org/project/drupal/issues/3165305#comment-14058586);
+this can be automatically applied if you have [`cweagans/composer-patches`
+installed and
+configured to allow patching from dependencies](https://github.com/cweagans/composer-patches#allowing-patches-to-be-applied-from-dependencies).
