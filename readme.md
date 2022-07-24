@@ -16,6 +16,22 @@ part of this codebase is useful or will inspire someone out there.
 
 ----
 
+# Description
+
+This contains most of Omnipedia's menu and menu item-related code.
+
+Of particular note is the custom menu link entity, its associated plug-in and
+deriver, forms, a constraint validator, access control handler, and route
+controller; this custom menu link is very similar to the one offered by Drupal
+core with one crucial difference: instead of pointing to a discrete route or
+path, it points to a wiki node title which allows it to vary by the simulated
+wiki date.
+
+Additionally, this module contains the [route controller for the random
+page](/src/Controller/RandomPageController.php) menu item.
+
+----
+
 # Requirements
 
 * [Drupal 9](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
@@ -49,19 +65,3 @@ Then, in your root ```composer.json```, add the following to the
 Then, in your project's root, run ```composer require
 "drupal/omnipedia_menu:3.x-dev@dev"``` to have Composer install the module
 and its required dependencies for you.
-
-----
-
-# Description
-
-This contains most of Omnipedia's menu and menu item-related code.
-
-Of particular note is the custom menu link entity, its associated plug-in and
-deriver, forms, a constraint validator, access control handler, and route
-controller; this custom menu link is very similar to the one offered by Drupal
-core with one crucial difference: instead of pointing to a discrete route or
-path, it points to a wiki node title which allows it to vary by the simulated
-wiki date.
-
-Additionally, this module contains the [route controller for the random
-page](/src/Controller/RandomPageController.php) menu item.
