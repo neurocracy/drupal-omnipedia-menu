@@ -40,6 +40,12 @@ page](/src/Controller/RandomPageController.php) menu item.
 
 * [Composer](https://getcomposer.org/)
 
+## Drupal dependencies
+
+Follow the Composer installation instructions for these dependencies first:
+
+* The [`omnipedia_core`](https://github.com/neurocracy/drupal-omnipedia-core) and [`omnipedia_date`](https://github.com/neurocracy/drupal-omnipedia-date) modules.
+
 ----
 
 # Installation
