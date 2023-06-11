@@ -185,6 +185,7 @@ class RandomPageController extends ControllerBase {
     /** @var array */
     $currentDateNids = \array_values(($this->nodeStorage->getQuery())
       ->condition('nid', $nodeData['dates'][$currentDate], 'IN')
+      ->accessCheck(true)
       ->execute()
     );
 

@@ -34,7 +34,7 @@ page](/src/Controller/RandomPageController.php) menu item.
 
 # Requirements
 
-* [Drupal 9](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
+* [Drupal 9.5 or 10](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
 
 * PHP 8
 
@@ -69,7 +69,7 @@ section:
 ```
 
 Then, in your project's root, run `composer require
-"drupal/omnipedia_menu:3.x-dev@dev"` to have Composer install the module and its
+"drupal/omnipedia_menu:4.x-dev@dev"` to have Composer install the module and its
 required dependencies for you.
 
 ## Patches
@@ -79,3 +79,15 @@ patch](https://www.drupal.org/project/drupal/issues/3165305#comment-14058586);
 this can be automatically applied if you have [`cweagans/composer-patches`
 installed and
 configured to allow patching from dependencies](https://github.com/cweagans/composer-patches#allowing-patches-to-be-applied-from-dependencies).
+
+----
+
+# Major breaking changes
+
+The following major version bumps indicate breaking changes:
+
+* 4.x:
+
+  * Requires Drupal 9.5 or [Drupal 10](https://www.drupal.org/project/drupal/releases/10.0.0) with compatibility and deprecation fixes for the latter.
+
+  * Increases minimum version of [Hook Event Dispatcher](https://www.drupal.org/project/hook_event_dispatcher) to 3.1, removes deprecated code, and adds support for 4.0 which supports Drupal 10.

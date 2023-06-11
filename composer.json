@@ -12,13 +12,14 @@
   ],
   "require": {
     "php": "^8",
+    "drupal/core": "^9.5 || ^10.0",
     "cweagans/composer-patches": "^1.7",
-    "drupal/hook_event_dispatcher": "^3.0"
+    "drupal/hook_event_dispatcher": "^3.1 || ^4.0"
   },
   "extra": {
     "patches": {
       "drupal/core": {
-        "UrlGenerator improperly escapes a colon in the path [#3165305]: https://www.drupal.org/project/drupal/issues/3165305#comment-14058586": "https://raw.githubusercontent.com/neurocracy/drupal-omnipedia-menu/3.x/patches/drupal/core/url_escaped-3165305-10.patch"
+        "UrlGenerator improperly escapes a colon in the path [#3165305]: https://www.drupal.org/project/drupal/issues/3165305#comment-14058586": "https://raw.githubusercontent.com/neurocracy/drupal-omnipedia-menu/4.x/patches/drupal/core/url_escaped-3165305-10.patch"
       }
     }
   }

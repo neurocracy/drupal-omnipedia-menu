@@ -53,7 +53,9 @@ class WikiNodeMenuLinkDeriver extends DeriverBase implements ContainerDeriverInt
   public function getDerivativeDefinitions($basePluginDefinition) {
 
     /** @var array */
-    $entityIds = $this->wikiNodeMenuLinkStorage->getQuery()->execute();
+    $entityIds = $this->wikiNodeMenuLinkStorage->getQuery()
+      ->accessCheck(true)
+      ->execute();
 
     /** @var array[] */
     $defininitions = [];

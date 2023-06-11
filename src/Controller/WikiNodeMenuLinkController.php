@@ -105,6 +105,7 @@ class WikiNodeMenuLinkController extends ControllerBase {
     $nids = ($this->nodeStorage->getQuery())
       ->condition('type', Node::getWikiNodeType())
       ->condition('title', $input, 'CONTAINS')
+      ->accessCheck(true)
       ->execute();
 
     /** @var string[] */

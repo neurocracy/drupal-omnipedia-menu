@@ -2,13 +2,12 @@ name: Omnipedia - Menus
 type: module
 description: Provides menu items and menu-related functionality for Omnipedia.
 package: Omnipedia
-core_version_requirement: ^9
+core_version_requirement: ^9.5 || ^10.0
 
 dependencies:
   - drupal:menu_ui
   - drupal:options
   - drupal:user
   - hook_event_dispatcher:core_event_dispatcher
-  - hook_event_dispatcher:hook_event_dispatcher
   - omnipedia_core:omnipedia_core
   - omnipedia_date:omnipedia_date

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\omnipedia_menu\EventSubscriber\Entity;
 
 use Drupal\Core\Routing\StackedRouteMatchInterface;
+use Drupal\core_event_dispatcher\EntityHookEvents;
 use Drupal\core_event_dispatcher\Event\Entity\EntityViewAlterEvent;
-use Drupal\hook_event_dispatcher\HookEventDispatcherInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRouteInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -64,8 +64,7 @@ class RemoveWikiNodeRouteContextualLinksEventSubscriber implements EventSubscrib
    */
   public static function getSubscribedEvents(): array {
     return [
-      HookEventDispatcherInterface::ENTITY_VIEW_ALTER =>
-        'removeWikiNodeContextualLinks',
+      EntityHookEvents::ENTITY_VIEW_ALTER => 'removeWikiNodeContextualLinks',
     ];
   }
 
