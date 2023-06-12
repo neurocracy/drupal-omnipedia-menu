@@ -74,6 +74,41 @@ In your root `composer.json`, add the following to the `"repositories"` section:
 }
 ```
 
+### Patching
+
+This provides [one or more patches](#patches). These can be applied automatically by the the
+[`cweagans/composer-patches`](https://github.com/cweagans/composer-patches/tree/1.x)
+Composer plug-in, but some set up is required before installing this module.
+Notably, you'll need to [enable patching from
+dependencies](https://github.com/cweagans/composer-patches/tree/1.x#allowing-patches-to-be-applied-from-dependencies) (such as this module 🤓). At
+a minimum, you should have these values in your root `composer.json` (merge with
+existing keys as needed):
+
+
+```json
+{
+  "require": {
+    "cweagans/composer-patches": "^1.7.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "cweagans/composer-patches": true
+    }
+  },
+  "extra": {
+    "enable-patching": true,
+    "patchLevel": {
+      "drupal/core": "-p2"
+    }
+  }
+}
+
+```
+
+**Important**: The 1.x version of the plug-in is currently required because it
+allows for applying patches from a dependency; this is not implemented nor
+planned for the 2.x branch of the plug-in.
+
 ### Installing
 
 Once you've completed all of the above, run `composer require
@@ -87,6 +122,17 @@ patch](https://www.drupal.org/project/drupal/issues/3165305#comment-14058586);
 this can be automatically applied if you have [`cweagans/composer-patches`
 installed and
 configured to allow patching from dependencies](https://github.com/cweagans/composer-patches#allowing-patches-to-be-applied-from-dependencies).
+
+
+----
+
+# Patches
+
+The following patches are supplied (see [Patching](#patching) above):
+
+* Drupal core:
+
+  * [UrlGenerator improperly escapes a colon in the path [#3165305]](https://www.drupal.org/project/drupal/issues/3165305#comment-14058586)
 
 ----
 
