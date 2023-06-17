@@ -3,6 +3,10 @@
   "description": "Omnipedia - Menus",
   "type": "drupal-custom-module",
   "license": "GPL-2.0-or-later",
+  "support": {
+    "docs": "https://github.com/neurocracy/drupal-omnipedia-menu",
+    "source": "https://github.com/neurocracy/drupal-omnipedia-menu"
+  },
   "authors": [
     {
       "name": "Ambient.Impact",
