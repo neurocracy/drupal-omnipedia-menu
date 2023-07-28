@@ -9,9 +9,6 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Checks that an 'omnipedia_wiki_node_menu_link' points to existing node(s).
  *
- * This specifically checks that attached data with the same type and target
- * cannot overlap their date ranges.
- *
  * @Constraint(
  *   id     = "WikiNodeMenuLinkNodeTitle",
  *   label  = @Translation("Omnipedia wiki node menu link title", context = "Validation"),
