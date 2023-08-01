@@ -6,7 +6,7 @@ namespace Drupal\omnipedia_menu\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Component\Utility\Xss;
-use Drupal\node\NodeStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\omnipedia_core\Entity\Node;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\system\MenuInterface;
@@ -20,11 +20,11 @@ use Symfony\Component\HttpFoundation\Request;
 class WikiNodeMenuLinkController extends ControllerBase {
 
   /**
-   * The Drupal node entity storage.
+   * The Drupal entity type manager.
    *
-   * @var \Drupal\node\NodeStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected NodeStorageInterface $nodeStorage;
+  protected $entityTypeManager;
 
   /**
    * The Omnipedia wiki node tracker service.
@@ -36,18 +36,18 @@ class WikiNodeMenuLinkController extends ControllerBase {
   /**
    * Constructs this controller; saves dependencies.
    *
-   * @param \Drupal\node\NodeStorageInterface $nodeStorage
-   *   The Drupal node entity storage.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The Drupal entity type manager.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface $wikiNodeTracker
    *   The Omnipedia wiki node tracker service.
    */
   public function __construct(
-    NodeStorageInterface      $nodeStorage,
-    WikiNodeTrackerInterface  $wikiNodeTracker
+    EntityTypeManagerInterface  $entityTypeManager,
+    WikiNodeTrackerInterface    $wikiNodeTracker
   ) {
-    $this->nodeStorage      = $nodeStorage;
-    $this->wikiNodeTracker  = $wikiNodeTracker;
+    $this->entityTypeManager  = $entityTypeManager;
+    $this->wikiNodeTracker    = $wikiNodeTracker;
   }
 
   /**
@@ -55,7 +55,7 @@ class WikiNodeMenuLinkController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')->getStorage('node'),
+      $container->get('entity_type.manager'),
       $container->get('omnipedia.wiki_node_tracker')
     );
   }
@@ -74,11 +74,11 @@ class WikiNodeMenuLinkController extends ControllerBase {
    */
   public function addLink(MenuInterface $menu) {
 
-    $menuLink = $this->entityTypeManager()
-      ->getStorage('omnipedia_wiki_node_menu_link')
-      ->create([
-        'menu_name' => $menu->id(),
-      ]);
+    $menuLink = $this->entityTypeManager->getStorage(
+      'omnipedia_wiki_node_menu_link'
+    )->create([
+      'menu_name' => $menu->id(),
+    ]);
 
     return $this->entityFormBuilder()->getForm($menuLink);
 
@@ -102,7 +102,7 @@ class WikiNodeMenuLinkController extends ControllerBase {
     $nodeData = $this->wikiNodeTracker->getTrackedWikiNodeData();
 
     /** @var string[] */
-    $nids = ($this->nodeStorage->getQuery())
+    $nids = ($this->entityTypeManager->getStorage('node')->getQuery())
       ->condition('type', Node::getWikiNodeType())
       ->condition('title', $input, 'CONTAINS')
       ->accessCheck(true)

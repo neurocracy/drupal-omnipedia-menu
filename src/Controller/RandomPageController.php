@@ -7,8 +7,8 @@ namespace Drupal\omnipedia_menu\Controller;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\node\NodeStorageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeAccessInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
@@ -24,11 +24,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class RandomPageController extends ControllerBase {
 
   /**
-   * The Drupal node entity storage.
+   * The Drupal entity type manager.
    *
-   * @var \Drupal\node\NodeStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected NodeStorageInterface $nodeStorage;
+  protected $entityTypeManager;
 
   /**
    * The Omnipedia timeline service.
@@ -75,8 +75,8 @@ class RandomPageController extends ControllerBase {
   /**
    * Controller constructor; saves dependencies.
    *
-   * @param \Drupal\node\NodeStorageInterface $nodeStorage
-   *   The Drupal node entity storage.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The Drupal entity type manager.
    *
    * @param \Drupal\omnipedia_date\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
@@ -97,21 +97,21 @@ class RandomPageController extends ControllerBase {
    *   The Omnipedia wiki node viewed service.
    */
   public function __construct(
-    NodeStorageInterface      $nodeStorage,
-    TimelineInterface         $timeline,
-    WikiNodeAccessInterface   $wikiNodeAccess,
-    WikiNodeMainPageInterface $wikiNodeMainPage,
-    WikiNodeResolverInterface $wikiNodeResolver,
-    WikiNodeTrackerInterface  $wikiNodeTracker,
-    WikiNodeViewedInterface   $wikiNodeViewed
+    EntityTypeManagerInterface  $entityTypeManager,
+    TimelineInterface           $timeline,
+    WikiNodeAccessInterface     $wikiNodeAccess,
+    WikiNodeMainPageInterface   $wikiNodeMainPage,
+    WikiNodeResolverInterface   $wikiNodeResolver,
+    WikiNodeTrackerInterface    $wikiNodeTracker,
+    WikiNodeViewedInterface     $wikiNodeViewed
   ) {
-    $this->nodeStorage      = $nodeStorage;
-    $this->timeline         = $timeline;
-    $this->wikiNodeAccess   = $wikiNodeAccess;
-    $this->wikiNodeMainPage = $wikiNodeMainPage;
-    $this->wikiNodeResolver = $wikiNodeResolver;
-    $this->wikiNodeTracker  = $wikiNodeTracker;
-    $this->wikiNodeViewed   = $wikiNodeViewed;
+    $this->entityTypeManager  = $entityTypeManager;
+    $this->timeline           = $timeline;
+    $this->wikiNodeAccess     = $wikiNodeAccess;
+    $this->wikiNodeMainPage   = $wikiNodeMainPage;
+    $this->wikiNodeResolver   = $wikiNodeResolver;
+    $this->wikiNodeTracker    = $wikiNodeTracker;
+    $this->wikiNodeViewed     = $wikiNodeViewed;
   }
 
   /**
@@ -119,7 +119,7 @@ class RandomPageController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')->getStorage('node'),
+      $container->get('entity_type.manager'),
       $container->get('omnipedia.timeline'),
       $container->get('omnipedia.wiki_node_access'),
       $container->get('omnipedia.wiki_node_main_page'),
@@ -183,7 +183,9 @@ class RandomPageController extends ControllerBase {
     // \array_values() is needed to ensure the keys are integers and not
     // strings.
     /** @var array */
-    $currentDateNids = \array_values(($this->nodeStorage->getQuery())
+    $currentDateNids = \array_values(($this->entityTypeManager->getStorage(
+      'node'
+    )->getQuery())
       ->condition('nid', $nodeData['dates'][$currentDate], 'IN')
       ->accessCheck(true)
       ->execute()

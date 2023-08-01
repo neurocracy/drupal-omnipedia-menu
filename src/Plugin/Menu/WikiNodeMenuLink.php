@@ -7,7 +7,7 @@ namespace Drupal\omnipedia_menu\Plugin\Menu;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\MenuLinkDefault;
 use Drupal\Core\Menu\StaticMenuLinkOverridesInterface;
@@ -57,6 +57,13 @@ class WikiNodeMenuLink extends MenuLinkDefault {
   protected EntityRepositoryInterface $entityRepository;
 
   /**
+   * The Drupal entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
    * The Drupal language manager.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
@@ -82,13 +89,6 @@ class WikiNodeMenuLink extends MenuLinkDefault {
   protected NodeInterface|null|bool $wikiNode = false;
 
   /**
-   * The WikiNodeMenuLink entity storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected EntityStorageInterface $wikiNodeMenuLinkStorage;
-
-  /**
    * The Omnipedia wiki node revision service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
@@ -101,14 +101,14 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The Drupal entity repository.
    *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The Drupal entity type manager.
+   *
    * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The Drupal language manager.
    *
    * @param \Drupal\omnipedia_date\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
-   *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $wikiNodeMenuLinkStorage
-   *   The WikiNodeMenuLink entity storage.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
    *   The Omnipedia wiki node revision service.
@@ -118,10 +118,10 @@ class WikiNodeMenuLink extends MenuLinkDefault {
     $pluginID,
     $pluginDefinition,
     EntityRepositoryInterface         $entityRepository,
+    EntityTypeManagerInterface        $entityTypeManager,
     LanguageManagerInterface          $languageManager,
     StaticMenuLinkOverridesInterface  $staticOverride,
     TimelineInterface                 $timeline,
-    EntityStorageInterface            $wikiNodeMenuLinkStorage,
     WikiNodeRevisionInterface         $wikiNodeRevision
   ) {
     parent::__construct(
@@ -131,11 +131,11 @@ class WikiNodeMenuLink extends MenuLinkDefault {
       $staticOverride
     );
 
-    $this->entityRepository         = $entityRepository;
-    $this->languageManager          = $languageManager;
-    $this->timeline                 = $timeline;
-    $this->wikiNodeMenuLinkStorage  = $wikiNodeMenuLinkStorage;
-    $this->wikiNodeRevision         = $wikiNodeRevision;
+    $this->entityRepository   = $entityRepository;
+    $this->entityTypeManager  = $entityTypeManager;
+    $this->languageManager    = $languageManager;
+    $this->timeline           = $timeline;
+    $this->wikiNodeRevision   = $wikiNodeRevision;
   }
 
   /**
@@ -152,11 +152,10 @@ class WikiNodeMenuLink extends MenuLinkDefault {
       $pluginID,
       $pluginDefinition,
       $container->get('entity.repository'),
+      $container->get('entity_type.manager'),
       $container->get('language_manager'),
       $container->get('menu_link.static.overrides'),
       $container->get('omnipedia.timeline'),
-      $container->get('entity_type.manager')
-        ->getStorage('omnipedia_wiki_node_menu_link'),
       $container->get('omnipedia.wiki_node_revision')
     );
   }
@@ -173,9 +172,9 @@ class WikiNodeMenuLink extends MenuLinkDefault {
     }
 
     /** @var \Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface|null */
-    $entity = $this->wikiNodeMenuLinkStorage->load(
-      $this->getMetaData()['entity_id']
-    );
+    $entity = $this->entityTypeManager->getStorage(
+      'omnipedia_wiki_node_menu_link'
+    )->load($this->getMetaData()['entity_id']);
 
     if (!\is_object($entity)) {
       throw new PluginException(

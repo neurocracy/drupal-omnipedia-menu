@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\omnipedia_menu\Plugin\Deriver;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -15,25 +15,25 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WikiNodeMenuLinkDeriver extends DeriverBase implements ContainerDeriverInterface {
 
   /**
-   * The WikiNodeMenuLink entity storage.
+   * The Drupal entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected EntityStorageInterface $wikiNodeMenuLinkStorage;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Constructs this deriver; saves dependencies.
    *
    * @param string $basePluginId
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $wikiNodeMenuLinkStorage
-   *   The WikiNodeMenuLink entity storage.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The Drupal entity type manager.
    */
   public function __construct(
     string $basePluginId,
-    EntityStorageInterface $wikiNodeMenuLinkStorage
+    EntityTypeManagerInterface $entityTypeManager
   ) {
-    $this->wikiNodeMenuLinkStorage = $wikiNodeMenuLinkStorage;
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -43,7 +43,6 @@ class WikiNodeMenuLinkDeriver extends DeriverBase implements ContainerDeriverInt
     return new static(
       $basePluginId,
       $container->get('entity_type.manager')
-        ->getStorage('omnipedia_wiki_node_menu_link')
     );
   }
 
@@ -52,8 +51,13 @@ class WikiNodeMenuLinkDeriver extends DeriverBase implements ContainerDeriverInt
    */
   public function getDerivativeDefinitions($basePluginDefinition) {
 
+    /** @var \Drupal\Core\Entity\EntityStorageInterface */
+    $storage = $this->entityTypeManager->getStorage(
+      'omnipedia_wiki_node_menu_link'
+    );
+
     /** @var array */
-    $entityIds = $this->wikiNodeMenuLinkStorage->getQuery()
+    $entityIds = $storage->getQuery()
       ->accessCheck(true)
       ->execute();
 
@@ -61,7 +65,7 @@ class WikiNodeMenuLinkDeriver extends DeriverBase implements ContainerDeriverInt
     $defininitions = [];
 
     /** @var \Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface[] */
-    $entities = $this->wikiNodeMenuLinkStorage->loadMultiple($entityIds);
+    $entities = $storage->loadMultiple($entityIds);
 
     /** @var \Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface $entity */
     foreach ($entities as $entity) {
