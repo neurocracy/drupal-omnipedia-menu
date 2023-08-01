@@ -6,9 +6,10 @@ namespace Drupal\omnipedia_menu\Controller;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
-use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\omnipedia_core\Service\WikiNodeAccessInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
@@ -21,14 +22,14 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Controller for the 'omnipedia_menu.random_page' route.
  */
-class RandomPageController extends ControllerBase {
+class RandomPageController implements ContainerInjectionInterface {
 
   /**
    * The Drupal entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The Omnipedia timeline service.
@@ -155,9 +156,6 @@ class RandomPageController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response object.
    *
-   * @see \Drupal\Core\Controller\ControllerBase::redirect()
-   *   Handles the redirect for us.
-   *
    * @see https://www.php.net/manual/en/function.shuffle.php
    *   Can we use the built-in PHP \shuffle() function to create a playlist of
    *   wiki nodes ahead of time rather than the current method of randomization
@@ -241,11 +239,11 @@ class RandomPageController extends ControllerBase {
 
     \shuffle($shuffled);
 
-    return $this->redirect('entity.node.canonical', [
+    return new RedirectResponse(Url::fromRoute('entity.node.canonical', [
       // Return the first element from the shuffled list of available node IDs
       // (nids).
       'node' => $shuffled[0],
-    ]);
+    ])->toString(), 302);
 
   }
 

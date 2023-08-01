@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_menu\Controller;
 
-use Drupal\Core\Controller\ControllerBase;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityFormBuilderInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\omnipedia_core\Entity\Node;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
@@ -17,14 +18,21 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Route controller for 'omnipedia_wiki_node_menu_link' entities.
  */
-class WikiNodeMenuLinkController extends ControllerBase {
+class WikiNodeMenuLinkController implements ContainerInjectionInterface {
+
+  /**
+   * The Drupal entity form builder.
+   *
+   * @var \Drupal\Core\Entity\EntityFormBuilderInterface
+   */
+  protected EntityFormBuilderInterface $entityFormBuilder;
 
   /**
    * The Drupal entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The Omnipedia wiki node tracker service.
@@ -43,9 +51,11 @@ class WikiNodeMenuLinkController extends ControllerBase {
    *   The Omnipedia wiki node tracker service.
    */
   public function __construct(
+    EntityFormBuilderInterface  $entityFormBuilder,
     EntityTypeManagerInterface  $entityTypeManager,
     WikiNodeTrackerInterface    $wikiNodeTracker
   ) {
+    $this->entityFormBuilder  = $entityFormBuilder;
     $this->entityTypeManager  = $entityTypeManager;
     $this->wikiNodeTracker    = $wikiNodeTracker;
   }
@@ -55,6 +65,7 @@ class WikiNodeMenuLinkController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('entity.form_builder'),
       $container->get('entity_type.manager'),
       $container->get('omnipedia.wiki_node_tracker')
     );
@@ -80,7 +91,7 @@ class WikiNodeMenuLinkController extends ControllerBase {
       'menu_name' => $menu->id(),
     ]);
 
-    return $this->entityFormBuilder()->getForm($menuLink);
+    return $this->entityFormBuilder->getForm($menuLink);
 
   }
 
