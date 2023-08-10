@@ -107,7 +107,7 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
         $i = 0; $i < $form['wiki_node_title']['widget']['#cardinality']; $i++
       ) {
         $form['wiki_node_title']['widget'][$i]['value']['#autocomplete_route_name'] =
-          'omnipedia_menu.wiki_node_menu_link_autocomplete';
+          'omnipedia_core.wiki_node_title_autocomplete';
       }
     }
 
