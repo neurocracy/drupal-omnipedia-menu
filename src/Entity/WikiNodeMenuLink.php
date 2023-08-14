@@ -511,9 +511,13 @@ class WikiNodeMenuLink extends ContentEntityBase implements WikiNodeMenuLinkInte
       // Children get re-attached to the menu link's parent.
       $parentPluginId = $menuLink->getParentId();
 
-      $children = $storage->loadByProperties([
-        'parent' => $menuLink->getPluginId(),
-      ]);
+      /** @var string[] Zero or more menu link entity IDs, keyed by their most recent revision ID. */
+      $queryResult = ($storage->getQuery())
+        ->condition('parent', $menuLink->getPluginId())
+        ->accessCheck(false)
+        ->execute();
+
+      $children = $storage->loadMultiple($queryResult);
 
       foreach ($children as $child) {
         /** @var \Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface $child */
