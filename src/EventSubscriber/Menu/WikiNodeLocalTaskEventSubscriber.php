@@ -7,7 +7,6 @@ namespace Drupal\omnipedia_menu\EventSubscriber\Menu;
 use Drupal\core_event_dispatcher\Event\Menu\MenuLocalTasksAlterEvent;
 use Drupal\core_event_dispatcher\MenuHookEvents;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -19,13 +18,6 @@ class WikiNodeLocalTaskEventSubscriber implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
-   * The Omnipedia wiki node resolver service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
-   */
-  protected WikiNodeResolverInterface $wikiNodeResolver;
-
-  /**
    * Service constructor; saves dependencies.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
@@ -35,12 +27,9 @@ class WikiNodeLocalTaskEventSubscriber implements EventSubscriberInterface {
    *   The Drupal string translation service.
    */
   public function __construct(
-    WikiNodeResolverInterface $wikiNodeResolver,
-    TranslationInterface      $stringTranslation
-  ) {
-    $this->stringTranslation  = $stringTranslation;
-    $this->wikiNodeResolver   = $wikiNodeResolver;
-  }
+    protected readonly WikiNodeResolverInterface $wikiNodeResolver,
+    protected $stringTranslation,
+  ) {}
 
   /**
    * {@inheritdoc}
