@@ -6,13 +6,6 @@ services:
     arguments:
       - '@string_translation'
 
-  # Service to alter wiki node local tasks.
-  omnipedia_menu.wiki_node_local_tasks_alter:
-    class: Drupal\omnipedia_menu\Service\WikiNodeLocalTasksAlter
-    arguments:
-      - '@omnipedia.wiki_node_resolver'
-      - '@string_translation'
-
   # Event subscriber to remove contextual links on wiki node view routes.
   omnipedia_menu.entity_remove_node_route_contextual_links_event_subscriber:
     class: Drupal\omnipedia_menu\EventSubscriber\Entity\RemoveWikiNodeRouteContextualLinksEventSubscriber
@@ -20,5 +13,13 @@ services:
       - '@current_route_match'
       - '@omnipedia.wiki_node_resolver'
       - '@omnipedia.wiki_node_route'
+    tags:
+      - { name: 'event_subscriber' }
+
+  omnipedia_menu.wiki_node_local_task_event_subscriber:
+    class: Drupal\omnipedia_menu\EventSubscriber\Menu\WikiNodeLocalTaskEventSubscriber
+    arguments:
+      - '@omnipedia.wiki_node_resolver'
+      - '@string_translation'
     tags:
       - { name: 'event_subscriber' }

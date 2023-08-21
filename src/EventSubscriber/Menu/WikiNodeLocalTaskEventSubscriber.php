@@ -2,20 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Drupal\omnipedia_menu\Service;
+namespace Drupal\omnipedia_menu\EventSubscriber\Menu;
 
-use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\core_event_dispatcher\Event\Menu\MenuLocalTasksAlterEvent;
+use Drupal\core_event_dispatcher\MenuHookEvents;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Service to alter wiki node local tasks.
- *
- * hook_event_dispatcher doesn't have an event for hook_menu_local_tasks_alter()
- * at the time of writing, so this is implemented as a generic service for now.
- */
-class WikiNodeLocalTasksAlter {
+ * Event subscriber to alter wiki node local tasks.
+s */
+class WikiNodeLocalTaskEventSubscriber implements EventSubscriberInterface {
 
   use StringTranslationTrait;
 
@@ -44,33 +43,34 @@ class WikiNodeLocalTasksAlter {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents(): array {
+    return [
+      MenuHookEvents::MENU_LOCAL_TASKS_ALTER => 'onMenuLocalTaskAlter',
+    ];
+  }
+
+  /**
    * Alter local tasks.
    *
    * This replaces the "View" tab content to either the main page title (if the
    * tab points to a main page wiki node), or "Article" for all other wiki page
    * nodes. Non-wiki node local tasks are left as-is.
    *
-   * @param array &$data
-   *   Associative array of tabs.
-   *
-   * @param string $routeName
-   *   The current route name.
-   *
-   * @param RefinableCacheableDependencyInterface &$cacheability
-   *   The cacheability metadata for the current route's local tasks.
+   * @param \Drupal\core_event_dispatcher\Event\Menu\MenuLocalTasksAlterEvent $event
+   *   Event object.
    *
    * @see \Drupal\omnipedia_core\Service\WikiNodeResolverInterface::resolveWikiNode()
    *   Used to load a wiki node and filter out any non-wiki nodes.
    *
    * @see \Drupal\omnipedia_core\Entity\NodeInterface::isMainPage()
    *   Used to determine if the route parameter is a main page wiki node.
-   *
-   * @see \hook_menu_local_tasks_alter()
    */
-  public function alter(
-    array &$data, string $routeName,
-    RefinableCacheableDependencyInterface &$cacheability
-  ): void {
+  public function onMenuLocalTaskAlter(MenuLocalTasksAlterEvent $event): void {
+
+    /** @var array Menu local tasks data. */
+    $data = &$event->getData();
 
     // Bail if no 'entity.node.canonical' route is found in the tabs, which is
     // the "View" page for nodes. Note that only the first level is checked as

@@ -17,15 +17,3 @@ function omnipedia_menu_help(
     $routeName, $routeMatch
   );
 }
-
-/**
- * Implements \hook_menu_local_tasks_alter().
- */
-function omnipedia_menu_menu_local_tasks_alter(
-  array &$data, string $routeName,
-  RefinableCacheableDependencyInterface &$cacheability
-): void {
-  \Drupal::service('omnipedia_menu.wiki_node_local_tasks_alter')->alter(
-    $data, $routeName, $cacheability
-  );
-}
