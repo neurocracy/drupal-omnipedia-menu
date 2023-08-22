@@ -1,11 +1,5 @@
 services:
 
-  # The Omnipedia menu help service.
-  omnipedia_menu.help:
-    class: Drupal\omnipedia_menu\Service\Help
-    arguments:
-      - '@string_translation'
-
   # Event subscriber to remove contextual links on wiki node view routes.
   omnipedia_menu.entity_remove_node_route_contextual_links_event_subscriber:
     class: Drupal\omnipedia_menu\EventSubscriber\Entity\RemoveWikiNodeRouteContextualLinksEventSubscriber
