@@ -45,9 +45,9 @@ class WikiNodeMenuLink extends MenuLinkDefault {
   /**
    * The wiki node menu link entity associated with this plug-in.
    *
-   * @var \Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface|null
+   * @var \Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface
    */
-  protected ?WikiNodeMenuLinkInterface $entity = null;
+  protected readonly WikiNodeMenuLinkInterface $entity;
 
   /**
    * The wiki node associated with this menu link, if any.
@@ -124,7 +124,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    */
   protected function getEntity(): WikiNodeMenuLinkInterface {
 
-    if (\is_object($this->entity)) {
+    if (isset($this->entity)) {
       return $this->entity;
     }
 
