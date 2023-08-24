@@ -23,34 +23,28 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WikiNodeMenuLinkAccessControlHandler extends EntityAccessControlHandler implements EntityHandlerInterface {
 
   /**
-   * The Drupal access manager.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected AccessManagerInterface $accessManager;
-
-  /**
    * Creates a new WikiNodeMenuLinkAccessControlHandler.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entityType
    *   The entity type definition.
+   *
    * @param \Drupal\Core\Access\AccessManagerInterface $accessManager
-   *   The access manager to check routes by name.
+   *   The Drupal access manager.
    */
   public function __construct(
-    EntityTypeInterface     $entityType,
-    AccessManagerInterface  $accessManager
+    EntityTypeInterface $entityType,
+    protected readonly AccessManagerInterface $accessManager,
   ) {
+
     parent::__construct($entityType);
 
-    $this->accessManager = $accessManager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function createInstance(
-    ContainerInterface $container, EntityTypeInterface $entityType
+    ContainerInterface $container, EntityTypeInterface $entityType,
   ) {
     return new static($entityType, $container->get('access_manager'));
   }
@@ -59,7 +53,7 @@ class WikiNodeMenuLinkAccessControlHandler extends EntityAccessControlHandler im
    * {@inheritdoc}
    */
   protected function checkAccess(
-    EntityInterface $entity, $operation, AccountInterface $account
+    EntityInterface $entity, $operation, AccountInterface $account,
   ) {
 
     switch ($operation) {
@@ -68,7 +62,7 @@ class WikiNodeMenuLinkAccessControlHandler extends EntityAccessControlHandler im
         // There is no direct viewing of a menu link, but still for purposes of
         // content_translation we need a generic way to check access.
         return AccessResult::allowedIfHasPermission(
-          $account, 'administer menu'
+          $account, 'administer menu',
         );
 
       case 'update':
@@ -76,7 +70,7 @@ class WikiNodeMenuLinkAccessControlHandler extends EntityAccessControlHandler im
         if (!$account->hasPermission('administer menu')) {
 
           return AccessResult::neutral(
-            "The 'administer menu' permission is required."
+            "The 'administer menu' permission is required.",
           )->cachePerPermissions();
 
         } else {

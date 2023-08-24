@@ -17,27 +17,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class RemoveWikiNodeRouteContextualLinksEventSubscriber implements EventSubscriberInterface {
 
   /**
-   * The Drupal current route match service.
-   *
-   * @var \Drupal\Core\Routing\StackedRouteMatchInterface
-   */
-  protected StackedRouteMatchInterface $currentRouteMatch;
-
-  /**
-   * The Omnipedia wiki node resolver service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
-   */
-  protected WikiNodeResolverInterface $wikiNodeResolver;
-
-  /**
-   * The Omnipedia wiki node route service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeRouteInterface
-   */
-  protected WikiNodeRouteInterface $wikiNodeRoute;
-
-  /**
    * Event subscriber constructor; saves dependencies.
    *
    * @param \Drupal\Core\Routing\StackedRouteMatchInterface $currentRouteMatch
@@ -50,14 +29,10 @@ class RemoveWikiNodeRouteContextualLinksEventSubscriber implements EventSubscrib
    *   The Omnipedia wiki node route service.
    */
   public function __construct(
-    StackedRouteMatchInterface  $currentRouteMatch,
-    WikiNodeResolverInterface   $wikiNodeResolver,
-    WikiNodeRouteInterface      $wikiNodeRoute
-  ) {
-    $this->currentRouteMatch  = $currentRouteMatch;
-    $this->wikiNodeResolver   = $wikiNodeResolver;
-    $this->wikiNodeRoute      = $wikiNodeRoute;
-  }
+    protected readonly StackedRouteMatchInterface $currentRouteMatch,
+    protected readonly WikiNodeResolverInterface  $wikiNodeResolver,
+    protected readonly WikiNodeRouteInterface     $wikiNodeRoute,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -79,7 +54,7 @@ class RemoveWikiNodeRouteContextualLinksEventSubscriber implements EventSubscrib
    *   The event object.
    */
   public function removeWikiNodeContextualLinks(
-    EntityViewAlterEvent $event
+    EntityViewAlterEvent $event,
   ): void {
 
     /** @var \Drupal\Core\Entity\EntityInterface */
@@ -88,7 +63,7 @@ class RemoveWikiNodeRouteContextualLinksEventSubscriber implements EventSubscrib
     if (
       !$this->wikiNodeResolver->isWikiNode($entity) ||
       !$this->wikiNodeRoute->isWikiNodeViewRouteName(
-        $this->currentRouteMatch->getRouteName()
+        $this->currentRouteMatch->getRouteName(),
       )
     ) {
       return;

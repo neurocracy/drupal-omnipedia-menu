@@ -50,34 +50,6 @@ class WikiNodeMenuLink extends MenuLinkDefault {
   protected ?WikiNodeMenuLinkInterface $entity = null;
 
   /**
-   * The Drupal entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected EntityRepositoryInterface $entityRepository;
-
-  /**
-   * The Drupal entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
-   * The Drupal language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected LanguageManagerInterface $languageManager;
-
-  /**
-   * The Omnipedia timeline service.
-   *
-   * @var \Drupal\omnipedia_date\Service\TimelineInterface
-   */
-  protected TimelineInterface $timeline;
-
-  /**
    * The wiki node associated with this menu link, if any.
    *
    * If the wiki node is found, this will contain the node object. If it cannot
@@ -87,13 +59,6 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    * @var \Drupal\omnipedia_core\Entity\NodeInterface|null|false
    */
   protected NodeInterface|null|bool $wikiNode = false;
-
-  /**
-   * The Omnipedia wiki node revision service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
-   */
-  protected WikiNodeRevisionInterface $wikiNodeRevision;
 
   /**
    * {@inheritdoc}
@@ -114,28 +79,22 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    *   The Omnipedia wiki node revision service.
    */
   public function __construct(
-    array $configuration,
-    $pluginID,
-    $pluginDefinition,
-    EntityRepositoryInterface         $entityRepository,
-    EntityTypeManagerInterface        $entityTypeManager,
-    LanguageManagerInterface          $languageManager,
-    StaticMenuLinkOverridesInterface  $staticOverride,
-    TimelineInterface                 $timeline,
-    WikiNodeRevisionInterface         $wikiNodeRevision
+    array $configuration, string $pluginId, array $pluginDefinition,
+    StaticMenuLinkOverridesInterface $staticOverride,
+    protected readonly EntityRepositoryInterface  $entityRepository,
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
+    protected readonly LanguageManagerInterface   $languageManager,
+    protected readonly TimelineInterface          $timeline,
+    protected readonly WikiNodeRevisionInterface  $wikiNodeRevision,
   ) {
+
     parent::__construct(
       $configuration,
-      $pluginID,
+      $pluginId,
       $pluginDefinition,
       $staticOverride
     );
 
-    $this->entityRepository   = $entityRepository;
-    $this->entityTypeManager  = $entityTypeManager;
-    $this->languageManager    = $languageManager;
-    $this->timeline           = $timeline;
-    $this->wikiNodeRevision   = $wikiNodeRevision;
   }
 
   /**
@@ -143,20 +102,18 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    */
   public static function create(
     ContainerInterface $container,
-    array $configuration,
-    $pluginID,
-    $pluginDefinition
+    array $configuration, $pluginId, $pluginDefinition,
   ) {
     return new static(
       $configuration,
-      $pluginID,
+      $pluginId,
       $pluginDefinition,
+      $container->get('menu_link.static.overrides'),
       $container->get('entity.repository'),
       $container->get('entity_type.manager'),
       $container->get('language_manager'),
-      $container->get('menu_link.static.overrides'),
       $container->get('omnipedia.timeline'),
-      $container->get('omnipedia.wiki_node_revision')
+      $container->get('omnipedia.wiki_node_revision'),
     );
   }
 
@@ -173,14 +130,14 @@ class WikiNodeMenuLink extends MenuLinkDefault {
 
     /** @var \Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface|null */
     $entity = $this->entityTypeManager->getStorage(
-      'omnipedia_wiki_node_menu_link'
+      'omnipedia_wiki_node_menu_link',
     )->load($this->getMetaData()['entity_id']);
 
     if (!\is_object($entity)) {
       throw new PluginException(
         'Could not load the wiki node menu link entity (' .
           $this->getMetaData()['entity_id'] .
-        ') associated with this plug-in.'
+        ') associated with this plug-in.',
       );
     }
 
@@ -192,6 +149,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
     $this->entity->setInsidePlugin();
 
     return $this->entity;
+
   }
 
   /**
@@ -203,16 +161,20 @@ class WikiNodeMenuLink extends MenuLinkDefault {
   protected function getWikiNode(): ?NodeInterface {
 
     if ($this->wikiNode === false) {
+
       if (empty($this->getMetaData()['wiki_node_title'])) {
+
         $this->wikiNode = null;
+
 
         return $this->wikiNode;
       }
 
       $this->wikiNode = $this->wikiNodeRevision->getWikiNodeRevision(
         $this->getMetaData()['wiki_node_title'],
-        $this->timeline->getDateFormatted('current', 'storage')
+        $this->timeline->getDateFormatted('current', 'storage'),
       );
+
     }
 
     return $this->wikiNode;
@@ -336,7 +298,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
 
     // Filter the list of updates to only those that are allowed.
     $overrides = \array_intersect_key(
-      $newDefinitionValues, $this->overrideAllowed
+      $newDefinitionValues, $this->overrideAllowed,
     );
 
     // Update the definition.
@@ -369,6 +331,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    * {@inheritdoc}
    */
   public function getCacheContexts() {
+
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->getWikiNode();
 
@@ -384,8 +347,8 @@ class WikiNodeMenuLink extends MenuLinkDefault {
       Cache::mergeContexts(
         parent::getCacheContexts(),
         // This menu link varies by the Omnipedia date.
-        ['omnipedia_dates']
-      )
+        ['omnipedia_dates'],
+      ),
     );
 
   }
@@ -410,11 +373,11 @@ class WikiNodeMenuLink extends MenuLinkDefault {
       Cache::mergeTags(
         parent::getCacheTags(),
         [
-          // Add the current date as a tag, so that this menu link is rebuilt if/
-          // when the given date tag is invalidated.
+          // Add the current date as a tag, so that this menu link is rebuilt
+          // if/ when the given date tag is invalidated.
           'omnipedia_dates:' .
-            $this->timeline->getDateFormatted('current', 'storage')
-        ]
+            $this->timeline->getDateFormatted('current', 'storage'),
+        ],
       )
     );
 

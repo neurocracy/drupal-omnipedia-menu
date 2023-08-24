@@ -18,30 +18,21 @@ use Symfony\Component\Validator\ConstraintValidator;
 class WikiNodeMenuLinkNodeTitleValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The Omnipedia wiki node tracker service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
-   */
-  protected WikiNodeTrackerInterface $wikiNodeTracker;
-
-  /**
    * Constructs this validator; saves dependencies.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface $wikiNodeTracker
    *   The Omnipedia wiki node tracker service.
    */
   public function __construct(
-    WikiNodeTrackerInterface $wikiNodeTracker
-  ) {
-    $this->wikiNodeTracker = $wikiNodeTracker;
-  }
+    protected readonly WikiNodeTrackerInterface $wikiNodeTracker,
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('omnipedia.wiki_node_tracker')
+      $container->get('omnipedia.wiki_node_tracker'),
     );
   }
 
@@ -61,7 +52,7 @@ class WikiNodeMenuLinkNodeTitleValidator extends ConstraintValidator implements 
 
     /** @var \Drupal\Core\Url */
     $contentAdminUrl = Url::fromRoute(
-      'system.admin_content', ['type' => Node::getWikiNodeType()]
+      'system.admin_content', ['type' => Node::getWikiNodeType()],
     );
 
     /** @var bool */
@@ -79,7 +70,7 @@ class WikiNodeMenuLinkNodeTitleValidator extends ConstraintValidator implements 
           $constraint->noNodeWithTitleHasContentAdmin, [
             ':contentAdminUrl'  => $contentAdminUrl->toString(),
             '%title'            => $item->value,
-          ]
+          ],
         );
 
       // If the user does not have access to the content overview, only include
@@ -88,7 +79,7 @@ class WikiNodeMenuLinkNodeTitleValidator extends ConstraintValidator implements 
         $this->context->addViolation(
           $constraint->noNodeWithTitleHasNotContentAdmin, [
             '%title' => $item->value,
-          ]
+          ],
         );
       }
 

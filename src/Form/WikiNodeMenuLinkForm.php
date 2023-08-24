@@ -23,20 +23,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WikiNodeMenuLinkForm extends ContentEntityForm {
 
   /**
-   * The wiki node menu link entity.
-   *
-   * @var \Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface
-   */
-  protected $entity;
-
-  /**
-   * The Drupal parent form selector service.
-   *
-   * @var \Drupal\Core\Menu\MenuParentFormSelectorInterface
-   */
-  protected MenuParentFormSelectorInterface $menuParentSelector;
-
-  /**
    * Constructs this form; saves dependencies.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
@@ -52,14 +38,14 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
    *   The Drupal time service.
    */
   public function __construct(
-    EntityRepositoryInterface       $entityRepository,
-    MenuParentFormSelectorInterface $menuParentSelector,
-    EntityTypeBundleInfoInterface   $entityTypeBundleInfo,
-    TimeInterface                   $time
+    EntityRepositoryInterface $entityRepository,
+    protected readonly MenuParentFormSelectorInterface $menuParentSelector,
+    EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+    TimeInterface $time,
   ) {
+
     parent::__construct($entityRepository, $entityTypeBundleInfo, $time);
 
-    $this->menuParentSelector = $menuParentSelector;
   }
 
   /**
@@ -70,7 +56,7 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
       $container->get('entity.repository'),
       $container->get('menu.parent_form_selector'),
       $container->get('entity_type.bundle.info'),
-      $container->get('datetime.time')
+      $container->get('datetime.time'),
     );
   }
 
@@ -90,7 +76,7 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
 
     /** @var array */
     $form['menu_parent'] = $this->menuParentSelector->parentSelectElement(
-      $default, $id
+      $default, $id,
     );
     $form['menu_parent']['#weight'] = 10;
     $form['menu_parent']['#title'] = $this->t('Parent link');
@@ -103,33 +89,42 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
     // would be done in WikiNodeMenuLink::baseFieldDefinitions(), but that
     // doesn't seem possible.
     if (isset($form['wiki_node_title']['widget'])) {
+
       for (
         $i = 0; $i < $form['wiki_node_title']['widget']['#cardinality']; $i++
       ) {
-        $form['wiki_node_title']['widget'][$i]['value']['#autocomplete_route_name'] =
-          'omnipedia_core.wiki_node_title_autocomplete';
+
+        $form['wiki_node_title']['widget'][$i]['value'][
+          '#autocomplete_route_name'
+        ] = 'omnipedia_core.wiki_node_title_autocomplete';
+
       }
+
     }
 
     return $form;
+
   }
 
   /**
    * {@inheritdoc}
    */
   protected function actions(array $form, FormStateInterface $formState) {
+
     $element = parent::actions($form, $formState);
 
     $element['submit']['#button_type'] = 'primary';
     $element['delete']['#access'] = $this->entity->access('delete');
 
     return $element;
+
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildEntity(array $form, FormStateInterface $formState) {
+
     /** @var \Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface $entity */
     $entity = parent::buildEntity($form, $formState);
 
@@ -145,12 +140,14 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
     );
 
     return $entity;
+
   }
 
   /**
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $formState) {
+
     // The entity is rebuilt in parent::submit().
     $menuLink = $this->entity;
     $menuLink->save();
@@ -160,6 +157,7 @@ class WikiNodeMenuLinkForm extends ContentEntityForm {
     ));
 
     $formState->setRedirectUrl($menuLink->toUrl('canonical'));
+
   }
 
 }

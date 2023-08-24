@@ -17,20 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WikiNodeMenuLinkController implements ContainerInjectionInterface {
 
   /**
-   * The Drupal entity form builder.
-   *
-   * @var \Drupal\Core\Entity\EntityFormBuilderInterface
-   */
-  protected EntityFormBuilderInterface $entityFormBuilder;
-
-  /**
-   * The Drupal entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
    * Constructs this controller; saves dependencies.
    *
    * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entityFormBuilder
@@ -40,12 +26,9 @@ class WikiNodeMenuLinkController implements ContainerInjectionInterface {
    *   The Drupal entity type manager.
    */
   public function __construct(
-    EntityFormBuilderInterface  $entityFormBuilder,
-    EntityTypeManagerInterface  $entityTypeManager,
-  ) {
-    $this->entityFormBuilder  = $entityFormBuilder;
-    $this->entityTypeManager  = $entityTypeManager;
-  }
+    protected readonly EntityFormBuilderInterface $entityFormBuilder,
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -72,7 +55,7 @@ class WikiNodeMenuLinkController implements ContainerInjectionInterface {
   public function addLink(MenuInterface $menu) {
 
     $menuLink = $this->entityTypeManager->getStorage(
-      'omnipedia_wiki_node_menu_link'
+      'omnipedia_wiki_node_menu_link',
     )->create([
       'menu_name' => $menu->id(),
     ]);

@@ -25,55 +25,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class RandomPageController implements ContainerInjectionInterface {
 
   /**
-   * The Drupal entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
-   * The Omnipedia timeline service.
-   *
-   * @var \Drupal\omnipedia_date\Service\TimelineInterface
-   */
-  protected TimelineInterface $timeline;
-
-  /**
-   * The Omnipedia wiki node main page service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
-   */
-  protected WikiNodeMainPageInterface $wikiNodeMainPage;
-
-  /**
-   * The Omnipedia wiki node access service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeAccessInterface
-   */
-  protected WikiNodeAccessInterface $wikiNodeAccess;
-
-  /**
-   * The Omnipedia wiki node resolver service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
-   */
-  protected WikiNodeResolverInterface $wikiNodeResolver;
-
-  /**
-   * The Omnipedia wiki node tracker service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
-   */
-  protected WikiNodeTrackerInterface $wikiNodeTracker;
-
-  /**
-   * The Omnipedia wiki node viewed service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeViewedInterface
-   */
-  protected WikiNodeViewedInterface $wikiNodeViewed;
-
-  /**
    * Controller constructor; saves dependencies.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
@@ -98,22 +49,14 @@ class RandomPageController implements ContainerInjectionInterface {
    *   The Omnipedia wiki node viewed service.
    */
   public function __construct(
-    EntityTypeManagerInterface  $entityTypeManager,
-    TimelineInterface           $timeline,
-    WikiNodeAccessInterface     $wikiNodeAccess,
-    WikiNodeMainPageInterface   $wikiNodeMainPage,
-    WikiNodeResolverInterface   $wikiNodeResolver,
-    WikiNodeTrackerInterface    $wikiNodeTracker,
-    WikiNodeViewedInterface     $wikiNodeViewed
-  ) {
-    $this->entityTypeManager  = $entityTypeManager;
-    $this->timeline           = $timeline;
-    $this->wikiNodeAccess     = $wikiNodeAccess;
-    $this->wikiNodeMainPage   = $wikiNodeMainPage;
-    $this->wikiNodeResolver   = $wikiNodeResolver;
-    $this->wikiNodeTracker    = $wikiNodeTracker;
-    $this->wikiNodeViewed     = $wikiNodeViewed;
-  }
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
+    protected readonly TimelineInterface          $timeline,
+    protected readonly WikiNodeAccessInterface    $wikiNodeAccess,
+    protected readonly WikiNodeMainPageInterface  $wikiNodeMainPage,
+    protected readonly WikiNodeResolverInterface  $wikiNodeResolver,
+    protected readonly WikiNodeTrackerInterface   $wikiNodeTracker,
+    protected readonly WikiNodeViewedInterface    $wikiNodeViewed,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -126,7 +69,7 @@ class RandomPageController implements ContainerInjectionInterface {
       $container->get('omnipedia.wiki_node_main_page'),
       $container->get('omnipedia.wiki_node_resolver'),
       $container->get('omnipedia.wiki_node_tracker'),
-      $container->get('omnipedia.wiki_node_viewed')
+      $container->get('omnipedia.wiki_node_viewed'),
     );
   }
 
@@ -145,7 +88,7 @@ class RandomPageController implements ContainerInjectionInterface {
   public function access(AccountInterface $account): AccessResultInterface {
 
     return AccessResult::allowedIf(
-      $this->wikiNodeAccess->canUserAccessAnyWikiNode($account)
+      $this->wikiNodeAccess->canUserAccessAnyWikiNode($account),
     );
 
   }
@@ -209,14 +152,14 @@ class RandomPageController implements ContainerInjectionInterface {
       function($nid) use ($currentDateNids) {
         // This filters out any nodes that aren't of the current date.
         return \in_array($nid, $currentDateNids);
-      }
+      },
     ));
 
     // Reduce the recent nodes array to one less than the available nodes.
     $currentDateRecentNids = \array_reverse(\array_slice(
       \array_reverse($currentDateRecentNids),
       0,
-      \count($currentDateNids) - 1
+      \count($currentDateNids) - 1,
     ));
 
     /** @var array */
@@ -225,7 +168,7 @@ class RandomPageController implements ContainerInjectionInterface {
       function($nid) use ($currentDateRecentNids) {
         // This filters out recently viewed wiki nodes.
         return !\in_array($nid, $currentDateRecentNids);
-      }
+      },
     );
 
     // If no nids are left at this point, fall back to the main page.

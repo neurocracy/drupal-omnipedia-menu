@@ -15,13 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WikiNodeMenuLinkDeriver extends DeriverBase implements ContainerDeriverInterface {
 
   /**
-   * The Drupal entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
    * Constructs this deriver; saves dependencies.
    *
    * @param string $basePluginId
@@ -31,10 +24,8 @@ class WikiNodeMenuLinkDeriver extends DeriverBase implements ContainerDeriverInt
    */
   public function __construct(
     string $basePluginId,
-    EntityTypeManagerInterface $entityTypeManager
-  ) {
-    $this->entityTypeManager = $entityTypeManager;
-  }
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -42,7 +33,7 @@ class WikiNodeMenuLinkDeriver extends DeriverBase implements ContainerDeriverInt
   public static function create(ContainerInterface $container, $basePluginId) {
     return new static(
       $basePluginId,
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
     );
   }
 
@@ -53,7 +44,7 @@ class WikiNodeMenuLinkDeriver extends DeriverBase implements ContainerDeriverInt
 
     /** @var \Drupal\Core\Entity\EntityStorageInterface */
     $storage = $this->entityTypeManager->getStorage(
-      'omnipedia_wiki_node_menu_link'
+      'omnipedia_wiki_node_menu_link',
     );
 
     /** @var array */
