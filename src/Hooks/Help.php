@@ -11,7 +11,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\hux\Attribute\Hook;
-use Drupal\omnipedia_core\Entity\Node;
+use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -76,7 +76,7 @@ class Help implements ContainerInjectionInterface {
 
     /** @var \Drupal\Core\Url */
     $contentAdminUrl = Url::fromRoute(
-      'system.admin_content', ['type' => Node::getWikiNodeType()]
+      'system.admin_content', ['type' => WikiNodeInfo::TYPE],
     );
 
     /** @var array */

@@ -6,7 +6,7 @@ namespace Drupal\omnipedia_menu\Plugin\Validation\Constraint;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Url;
-use Drupal\omnipedia_core\Entity\Node;
+use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
@@ -52,7 +52,7 @@ class WikiNodeMenuLinkNodeTitleValidator extends ConstraintValidator implements 
 
     /** @var \Drupal\Core\Url */
     $contentAdminUrl = Url::fromRoute(
-      'system.admin_content', ['type' => Node::getWikiNodeType()],
+      'system.admin_content', ['type' => WikiNodeInfo::TYPE],
     );
 
     /** @var bool */
