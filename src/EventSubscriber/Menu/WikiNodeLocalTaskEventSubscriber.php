@@ -7,6 +7,7 @@ namespace Drupal\omnipedia_menu\EventSubscriber\Menu;
 use Drupal\core_event_dispatcher\Event\Menu\MenuLocalTasksAlterEvent;
 use Drupal\core_event_dispatcher\MenuHookEvents;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -20,6 +21,9 @@ class WikiNodeLocalTaskEventSubscriber implements EventSubscriberInterface {
   /**
    * Service constructor; saves dependencies.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
+   *   The Omnipedia wiki node main page service.
+   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
    *
@@ -27,6 +31,7 @@ class WikiNodeLocalTaskEventSubscriber implements EventSubscriberInterface {
    *   The Drupal string translation service.
    */
   public function __construct(
+    protected readonly WikiNodeMainPageInterface $wikiNodeMainPage,
     protected readonly WikiNodeResolverInterface $wikiNodeResolver,
     protected $stringTranslation,
   ) {}
@@ -53,7 +58,7 @@ class WikiNodeLocalTaskEventSubscriber implements EventSubscriberInterface {
    * @see \Drupal\omnipedia_core\Service\WikiNodeResolverInterface::resolveWikiNode()
    *   Used to load a wiki node and filter out any non-wiki nodes.
    *
-   * @see \Drupal\omnipedia_core\Entity\NodeInterface::isMainPage()
+   * @see \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface::isMainPage()
    *   Used to determine if the route parameter is a main page wiki node.
    */
   public function onMenuLocalTaskAlter(MenuLocalTasksAlterEvent $event): void {
@@ -83,7 +88,7 @@ class WikiNodeLocalTaskEventSubscriber implements EventSubscriberInterface {
 
     // If the wiki page is a main page, use its title as the tab title, to match
     // Wikipedia.
-    if ($node->isMainPage()) {
+    if ($this->wikiNodeMainPage->isMainPage($node)) {
       $nodeLink['#link']['title'] = $node->getTitle();
 
     // Otherwise, just set the tab title to "Article", matching Wikipedia for all
