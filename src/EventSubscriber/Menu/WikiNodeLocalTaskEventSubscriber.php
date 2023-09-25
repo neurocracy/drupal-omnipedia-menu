@@ -7,8 +7,8 @@ namespace Drupal\omnipedia_menu\EventSubscriber\Menu;
 use Drupal\core_event_dispatcher\Event\Menu\MenuLocalTasksAlterEvent;
 use Drupal\core_event_dispatcher\MenuHookEvents;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
+use Drupal\omnipedia_main_page\Service\MainPageResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -21,8 +21,8 @@ class WikiNodeLocalTaskEventSubscriber implements EventSubscriberInterface {
   /**
    * Service constructor; saves dependencies.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
-   *   The Omnipedia wiki node main page service.
+   * @param \Drupal\omnipedia_main_page\Service\MainPageResolverInterface $mainPageResolver
+   *   The Omnipedia main page resolver service.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
@@ -31,8 +31,8 @@ class WikiNodeLocalTaskEventSubscriber implements EventSubscriberInterface {
    *   The Drupal string translation service.
    */
   public function __construct(
-    protected readonly WikiNodeMainPageInterface $wikiNodeMainPage,
-    protected readonly WikiNodeResolverInterface $wikiNodeResolver,
+    protected readonly MainPageResolverInterface  $mainPageResolver,
+    protected readonly WikiNodeResolverInterface  $wikiNodeResolver,
     protected $stringTranslation,
   ) {}
 
@@ -88,7 +88,7 @@ class WikiNodeLocalTaskEventSubscriber implements EventSubscriberInterface {
 
     // If the wiki page is a main page, use its title as the tab title, to match
     // Wikipedia.
-    if ($this->wikiNodeMainPage->isMainPage($node)) {
+    if ($this->mainPageResolver->is($node)) {
       $nodeLink['#link']['title'] = $node->getTitle();
 
     // Otherwise, just set the tab title to "Article", matching Wikipedia for all

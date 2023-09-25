@@ -13,7 +13,7 @@ services:
   omnipedia_menu.wiki_node_local_task_event_subscriber:
     class: Drupal\omnipedia_menu\EventSubscriber\Menu\WikiNodeLocalTaskEventSubscriber
     arguments:
-      - '@omnipedia.wiki_node_main_page'
+      - '@omnipedia_main_page.resolver'
       - '@omnipedia.wiki_node_resolver'
       - '@string_translation'
     tags:

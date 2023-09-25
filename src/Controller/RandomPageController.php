@@ -11,11 +11,11 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\omnipedia_core\Service\WikiNodeAccessInterface;
-use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
 use Drupal\omnipedia_date\Service\TimelineInterface;
+use Drupal\omnipedia_main_page\Service\MainPageResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -30,14 +30,14 @@ class RandomPageController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The Drupal entity type manager.
    *
+   * @param \Drupal\omnipedia_main_page\Service\MainPageResolverInterface $mainPageResolver
+   *   The Omnipedia main page resolver service.
+   *
    * @param \Drupal\omnipedia_date\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeAccessInterface $wikiNodeAccess
    *   The Omnipedia wiki node access service.
-   *
-   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
-   *   The Omnipedia wiki node main page service.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
@@ -50,9 +50,9 @@ class RandomPageController implements ContainerInjectionInterface {
    */
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
+    protected readonly MainPageResolverInterface  $mainPageResolver,
     protected readonly TimelineInterface          $timeline,
     protected readonly WikiNodeAccessInterface    $wikiNodeAccess,
-    protected readonly WikiNodeMainPageInterface  $wikiNodeMainPage,
     protected readonly WikiNodeResolverInterface  $wikiNodeResolver,
     protected readonly WikiNodeTrackerInterface   $wikiNodeTracker,
     protected readonly WikiNodeViewedInterface    $wikiNodeViewed,
@@ -64,9 +64,9 @@ class RandomPageController implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
+      $container->get('omnipedia_main_page.resolver'),
       $container->get('omnipedia.timeline'),
       $container->get('omnipedia.wiki_node_access'),
-      $container->get('omnipedia.wiki_node_main_page'),
       $container->get('omnipedia.wiki_node_resolver'),
       $container->get('omnipedia.wiki_node_tracker'),
       $container->get('omnipedia.wiki_node_viewed'),
@@ -113,7 +113,7 @@ class RandomPageController implements ContainerInjectionInterface {
     $nodeData = $this->wikiNodeTracker->getTrackedWikiNodeData();
 
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
-    $currentDateMainPage = $this->wikiNodeMainPage->getMainPage($currentDate);
+    $currentDateMainPage = $this->mainPageResolver->get($currentDate);
 
     /** @var string */
     $currentDateMainPageNid = $currentDateMainPage->nid->getString();
