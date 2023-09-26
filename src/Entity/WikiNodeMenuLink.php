@@ -59,15 +59,12 @@ use Drupal\user\UserInterface;
  *
  * @todo Make revisionable.
  *
- * @todo Create a custom storage controller to inject dependencies into this
- *   entity so we can avoid using \Drupal::service() and \t() in non-static
- *   methods.
+ * @todo Remove calls to \Drupal as much as possible and decouple this entity
+ *   from services, either by using wrapped entities via the Typed Entity module
+ *   or by other means.
  *
  * @todo Can we extend \Drupal\menu_link_content\Entity\MenuLinkContent rather
  *   than copying a lot of its code?
- *
- * @see \Drupal\omnipedia_core\Storage\NodeStorage
- *   Example of how perform dependency injection into entities.
  *
  * @see \Drupal\menu_link_content\Entity\MenuLinkContent
  *   A lot of code has been adapted from the Drupal core menu link content
