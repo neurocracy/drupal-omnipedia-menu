@@ -112,7 +112,7 @@ class RandomPageController implements ContainerInjectionInterface {
     /** @var array */
     $nodeData = $this->wikiNodeTracker->getTrackedWikiNodeData();
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+    /** @var \Drupal\node\NodeInterface */
     $currentDateMainPage = $this->mainPageResolver->get($currentDate);
 
     /** @var string */

@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\MenuLinkDefault;
 use Drupal\Core\Menu\StaticMenuLinkOverridesInterface;
-use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_date\Service\TimelineInterface;
 use Drupal\omnipedia_menu\Entity\WikiNodeMenuLinkInterface;
@@ -56,7 +56,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    * be found, this will be null. Initially, this will be false to indicate that
    * no attempt has been made to load it yet.
    *
-   * @var \Drupal\omnipedia_core\Entity\NodeInterface|null|false
+   * @var \Drupal\node\NodeInterface|null|false
    */
   protected NodeInterface|null|bool $wikiNode = false;
 
@@ -155,7 +155,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
   /**
    * Get the wiki node associated with this menu link for the current date.
    *
-   * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
+   * @return \Drupal\node\NodeInterface|null
    *   A node object, or null if a wiki node is not available.
    */
   protected function getWikiNode(): ?NodeInterface {
@@ -186,7 +186,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    */
   public function getRouteName() {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    /** @var \Drupal\node\NodeInterface|null */
     $node = $this->getWikiNode();
 
     // Return the <nolink> route name if there isn't a wiki node available to
@@ -205,7 +205,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    */
   public function getRouteParameters() {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    /** @var \Drupal\node\NodeInterface|null */
     $node = $this->getWikiNode();
 
     // If we can't find a wiki node, return empty parameters.
@@ -332,7 +332,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    */
   public function getCacheContexts() {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    /** @var \Drupal\node\NodeInterface|null */
     $node = $this->getWikiNode();
 
     if (\is_object($node)) {
@@ -358,7 +358,7 @@ class WikiNodeMenuLink extends MenuLinkDefault {
    */
   public function getCacheTags() {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    /** @var \Drupal\node\NodeInterface|null */
     $node = $this->getWikiNode();
 
     if (\is_object($node)) {

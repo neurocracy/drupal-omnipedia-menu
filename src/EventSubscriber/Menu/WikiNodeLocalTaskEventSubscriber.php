@@ -79,7 +79,7 @@ class WikiNodeLocalTaskEventSubscriber implements EventSubscriberInterface {
     /** @var array */
     $routeParameters = $nodeLink['#link']['url']->getRouteParameters();
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    /** @var \Drupal\node\NodeInterface|null */
     $node = $this->wikiNodeResolver->resolveWikiNode($routeParameters['node']);
 
     if (\is_null($node)) {
