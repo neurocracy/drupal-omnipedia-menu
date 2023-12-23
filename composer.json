@@ -20,9 +20,9 @@
     "cweagans/composer-patches": "^1.7",
     "drupal/hook_event_dispatcher": "^3.3 || ^4.0",
     "drupal/hux": "^1.1",
-    "drupal/omnipedia_core": "5.x-dev@dev || 6.x-dev@dev",
-    "drupal/omnipedia_date": "5.x-dev@dev",
-    "drupal/omnipedia_main_page": "1.x-dev@dev"
+    "drupal/omnipedia_core": "^5.0@dev || ^6.0@dev",
+    "drupal/omnipedia_date": "^5.0@dev",
+    "drupal/omnipedia_main_page": "^1.0@dev"
   },
   "extra": {
     "patches": {
