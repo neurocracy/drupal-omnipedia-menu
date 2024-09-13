@@ -74,7 +74,6 @@ dependencies](https://github.com/cweagans/composer-patches/tree/1.x#allowing-pat
 a minimum, you should have these values in your root `composer.json` (merge with
 existing keys as needed):
 
-
 ```json
 {
   "require": {
@@ -112,7 +111,6 @@ patch](https://www.drupal.org/project/drupal/issues/3165305#comment-14058586);
 this can be automatically applied if you have [`cweagans/composer-patches`
 installed and
 configured to allow patching from dependencies](https://github.com/cweagans/composer-patches#allowing-patches-to-be-applied-from-dependencies).
-
 
 ----
 
