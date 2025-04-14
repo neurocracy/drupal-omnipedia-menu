@@ -35,7 +35,7 @@ page](/src/Controller/RandomPageController.php) menu item.
 Before attempting to install this, you must add the Composer repositories as
 described in the installation instructions for these dependencies:
 
-* The [`omnipedia_core`](https://github.com/neurocracy/drupal-omnipedia-core), [`omnipedia_date`](https://github.com/neurocracy/drupal-omnipedia-date), and [`omnipedia_main_page`](https://github.com/neurocracy/drupal-omnipedia-main-page) modules.
+* The [`omnipedia_core`](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-core), [`omnipedia_date`](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-date), and [`omnipedia_main_page`](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-main-page) modules.
 
 ----
 
@@ -58,9 +58,10 @@ should get you up and running.
 In your root `composer.json`, add the following to the `"repositories"` section:
 
 ```json
-"drupal/omnipedia_menu": {
+{
   "type": "vcs",
-  "url": "https://github.com/neurocracy/drupal-omnipedia-menu.git"
+  "url": "https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-menu.git",
+  "only": ["drupal/omnipedia_menu"]
 }
 ```
 
