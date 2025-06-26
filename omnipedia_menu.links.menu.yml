@@ -11,3 +11,11 @@ omnipedia_random_page:
   route_name: omnipedia_menu.random_page
   menu_name: main
   title: 'Random article'
+  # Exclude this from RefreshLess lazy preloading for the time being as it
+  # results in a page being shown as the preview and then another takes its
+  # place when the network response is swapped in.
+  #
+  # @todo Detect this and return the same page. Then remove the attribute.
+  options:
+    attributes:
+      data-refreshless-lazy-preload: 'false'

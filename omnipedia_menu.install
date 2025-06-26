@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Rebuild router for addition of RefreshLess lazy preload opt out on random.
+ */
+function omnipedia_menu_update_9601(): void {
+
+  \Drupal::service('router.builder')->rebuild();
+
+}
