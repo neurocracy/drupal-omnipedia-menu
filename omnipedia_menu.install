@@ -12,7 +12,7 @@ function omnipedia_menu_update_9601(): void {
 }
 
 /**
- * Rebuild router addition of date parameters to random route.
+ * Rebuild router for addition of date parameters to random route.
  */
 function omnipedia_menu_update_9602(): void {
 
