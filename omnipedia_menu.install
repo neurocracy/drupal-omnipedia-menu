@@ -10,3 +10,12 @@ function omnipedia_menu_update_9601(): void {
   \Drupal::service('router.builder')->rebuild();
 
 }
+
+/**
+ * Rebuild router addition of date parameters to random route.
+ */
+function omnipedia_menu_update_9602(): void {
+
+  \Drupal::service('router.builder')->rebuild();
+
+}

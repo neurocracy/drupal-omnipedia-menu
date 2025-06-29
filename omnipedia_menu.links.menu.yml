@@ -8,6 +8,7 @@ omnipedia_wiki_node_menu_link:
   deriver: Drupal\omnipedia_menu\Plugin\Deriver\WikiNodeMenuLinkDeriver
 
 omnipedia_random_page:
+  class: Drupal\omnipedia_menu\Plugin\Menu\RandomPageMenuLink
   route_name: omnipedia_menu.random_page
   menu_name: main
   title: 'Random article'

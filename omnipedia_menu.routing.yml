@@ -31,8 +31,11 @@ entity.omnipedia_wiki_node_menu_link.delete_form:
     _entity_access: 'omnipedia_wiki_node_menu_link.delete'
 
 omnipedia_menu.random_page:
-  path: '/wiki/Special:Random'
+  path: '/wiki/{year}/{month}/{day}/Special:Random'
   defaults:
     _controller: '\Drupal\omnipedia_menu\Controller\RandomPageController::view'
   requirements:
     _custom_access: '\Drupal\omnipedia_menu\Controller\RandomPageController::access'
+    year:   \d{4}
+    month:  \d{2}
+    day:    \d{2}

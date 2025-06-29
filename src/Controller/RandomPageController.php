@@ -14,8 +14,10 @@ use Drupal\omnipedia_core\Service\WikiNodeAccessInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
+use Drupal\omnipedia_date\Service\DateResolverInterface;
 use Drupal\omnipedia_date\Service\TimelineInterface;
 use Drupal\omnipedia_main_page\Service\MainPageResolverInterface;
+use function implode;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -49,6 +51,7 @@ class RandomPageController implements ContainerInjectionInterface {
    *   The Omnipedia wiki node viewed service.
    */
   public function __construct(
+    protected readonly DateResolverInterface      $dateResolver,
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly MainPageResolverInterface  $mainPageResolver,
     protected readonly TimelineInterface          $timeline,
@@ -63,6 +66,7 @@ class RandomPageController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('omnipedia_date.date_resolver'),
       $container->get('entity_type.manager'),
       $container->get('omnipedia_main_page.resolver'),
       $container->get('omnipedia.timeline'),
@@ -104,10 +108,16 @@ class RandomPageController implements ContainerInjectionInterface {
    *   wiki nodes ahead of time rather than the current method of randomization
    *   at time of invoking this controller?
    */
-  public function view(): RedirectResponse {
+  public function view(
+    string $year, string $month, string $day,
+  ): RedirectResponse {
+
+    // This will validate and throw an exception if there's an error in
+    // constructing the date object.
+    $date = $this->dateResolver->resolve(implode('-', [$year, $month, $day]));
 
     /** @var string */
-    $currentDate = $this->timeline->getDateFormatted('current', 'storage');
+    $currentDate = $date->format('storage');
 
     /** @var array */
     $nodeData = $this->wikiNodeTracker->getTrackedWikiNodeData();
