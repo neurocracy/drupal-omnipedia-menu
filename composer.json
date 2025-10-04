@@ -27,7 +27,7 @@
   "extra": {
     "patches": {
       "drupal/core": {
-        "UrlGenerator improperly escapes a colon in the path [#3165305]: https://www.drupal.org/project/drupal/issues/3165305#comment-14058586": "https://raw.githubusercontent.com/neurocracy/drupal-omnipedia-menu/4.x/patches/drupal/core/url_escaped-3165305-10.patch"
+        "UrlGenerator improperly escapes a colon in the path [#3165305]: https://www.drupal.org/project/drupal/issues/3165305#comment-14058586": "https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-menu/-/raw/bb1d285f73d559da56fa8b2b0bce7e2acfed9409/patches/drupal/core/url_escaped-3165305-10.patch"
       }
     }
   }
