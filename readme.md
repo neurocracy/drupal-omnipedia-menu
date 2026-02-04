@@ -69,37 +69,20 @@ In your root `composer.json`, add the following to the `"repositories"` section:
 
 ### Patching
 
-This provides [one or more patches](#patches). These can be applied automatically by the the
-[`cweagans/composer-patches`](https://github.com/cweagans/composer-patches/tree/1.x)
-Composer plug-in, but some set up is required before installing this module.
-Notably, you'll need to [enable patching from
-dependencies](https://github.com/cweagans/composer-patches/tree/1.x#allowing-patches-to-be-applied-from-dependencies) (such as this module 🤓). At
-a minimum, you should have these values in your root `composer.json` (merge with
-existing keys as needed):
+This module provides [one or more patches](#patches). These can be applied automatically by the the [`cweagans/composer-patches`](https://github.com/cweagans/composer-patches) Composer plug-in. If you're not already using it in your project, you need to install it:
 
-```json
-{
-  "require": {
-    "cweagans/composer-patches": "^1.7.0"
-  },
-  "config": {
-    "allow-plugins": {
-      "cweagans/composer-patches": true
-    }
-  },
-  "extra": {
-    "enable-patching": true,
-    "patchLevel": {
-      "drupal/core": "-p2"
-    }
-  }
-}
-
+```shell
+composer require 'cweagans/composer-patches:^1.7 || ^2.0'
 ```
 
-**Important**: The 1.x version of the plug-in is currently required because it
-allows for applying patches from a dependency; this is not implemented nor
-planned for the 2.x branch of the plug-in.
+If you're using the 1.x version of the plug-in, you'll also need to run:
+
+```shell
+composer config extra.enable-patching true
+composer config --json --merge extra.patchLevel '{"drupal/core": "-p2"}'
+```
+
+Note that you should remove these once you upgrade to `cweagans/composer-patches:^2.0` as 2.0 no longer uses that configuration.
 
 ### Installing
 
